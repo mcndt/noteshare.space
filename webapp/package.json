@@ -1,6 +1,9 @@
 {
-	"name": "obsidian-note-sharing-server",
+	"name": "obsidian-note-sharing-webapp",
 	"version": "0.0.1",
+	"description": "SvelteKit webapp for fetching, decrypting and rendering obsidian notes.",
+	"author": "Maxime Cannoodt (mcndt)",
+	"license": "MIT",
 	"scripts": {
 		"dev": "svelte-kit dev",
 		"build": "svelte-kit build",
