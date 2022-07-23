@@ -6,9 +6,9 @@
 	<h1>About</h1>
 
 	<p>
-		I built this service mainly to use for myself, as I got sick of finding third-party services to
-		quickly share some Markdown notes I wrote in Obsidian. Because I believe that others might find
-		this useful too, I decided to release it as a public service.
+		I created this service largely for my own use, as I was tired of relying on third-party services
+		to quickly share some Markdown notes I wrote in Obsidian. Because I believe that others may find
+		this useful, I chose to make it available as a public service.
 	</p>
 
 	<h2>How it works</h2>
