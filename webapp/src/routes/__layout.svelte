@@ -45,7 +45,7 @@
 						<NavBarLink href="https://obsidian.md"
 							><span class="text-[#705dcf] font-bold">Get Obsidian</span></NavBarLink
 						>
-						<NavBarLink href="https://github.com/mcndt/obsidian-note-sharing">
+						<NavBarLink href="https://github.com/mcndt/noteshare.space">
 							<span class="flex gap-2 items-center justify-center">
 								<span class="text-black dark:text-zinc-200 md:hidden whitespace-nowrap">GitHub</span
 								>
