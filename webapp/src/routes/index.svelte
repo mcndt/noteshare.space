@@ -18,7 +18,7 @@
 </div> -->
 
 <article class="mx-auto max-w-4xl text-zinc-900 dark:text-zinc-100">
-	<div class="space-y-6 pt-24 pb-32">
+	<div class="space-y-6 pt-20 pb-24">
 		<h1 id="title" class="font-extrabold text-4xl md:text-5xl text-center">
 			Securely share your <span class="text-[#705dcf]">Obsidian</span> notes with one click.
 		</h1>
