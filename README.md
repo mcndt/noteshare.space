@@ -38,6 +38,8 @@ npm run dev
 
 Running the script starts a dev server for each, recompiling code on file changes. A reverse proxy (`proxy.js` in project root) runs the entire application at `http://localhost:5000`.
 
+If you want to contribute solely to the Obsidian plugin, please pull from the [obsidian-note-sharing](https://github.com/mcndt/obsidian-note-sharing) repo directly.
+
 Before you can store notes in the local development environment, you must migrate the local SQLite database (see next section).
 
 ### Local database
