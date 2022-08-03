@@ -10,10 +10,10 @@
 	and I build the Obsidian note sharing plugin and operate Noteshare.space. There are several ways to
 	get in touch with me.
 
-	<h2>Bugs</h2>
+	<h2>Bugs and feature requests</h2>
 
-	The preferred way to report bugs or request features for the web app or the Obsidian plugin is via
-	the
+	The preferred way to report bugs or request new features for the web app or the Obsidian plugin is
+	via the
 	<a class="underline" href="https://github.com/mcndt/obsidian-note-sharing/issues"
 		>GitHub issues page</a
 	>.
