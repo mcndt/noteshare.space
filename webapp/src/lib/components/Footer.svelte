@@ -11,7 +11,8 @@
 	<span>-</span>
 	<a class="underline" href="/contact">Contact</a>
 	<span>-</span>
-	<a class="underline" href="https://github.com/mcndt/obsidian-note-sharing/issues">Report bug</a>
+	<a class="underline" href="https://github.com/mcndt/obsidian-note-sharing/issues">🐛 Report bug</a
+	>
 	<span>-</span>
 	<a class="underline" href="https://www.buymeacoffee.com/mcndt">☕ Buy me a coffee</a>
 </footer>
