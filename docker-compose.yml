@@ -5,13 +5,14 @@ services:
   traefik:
     image: "traefik:v2.8"
     command:
-      #- "--log.level=DEBUG"
       - "--api.insecure=true"  # allows accessing a Traefik dashboard, disable in production
       - "--providers.docker=true"  # enables the Docker configuration discovery
       - "--providers.docker.exposedbydefault=false"  # do not expose Docker services by default
       - "--entrypoints.web.address=:5000"  # create an entrypoint called web, listening on :5000
+      - "--entrypoints.admin.address=:3333"  # create an entrypoint called web, listening on :5000
     ports:
       - "5000:5000"
+      - "3333:3333"
       - "8765:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -73,16 +74,18 @@ services:
 
   # grafana dashboard
   grafana:
-      image: grafana/grafana:7.5.7
-      ports:
-        - 3000:3000
-      restart: unless-stopped
-      volumes:
-        - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-        - grafana-data:/var/lib/grafana
-        - sqlite:/database/
-      environment:
-        - GF_INSTALL_PLUGINS=frser-sqlite-datasource
+    image: grafana/grafana:7.5.7
+    restart: unless-stopped
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - grafana-data:/var/lib/grafana
+      - sqlite:/database/
+    environment:
+      - GF_INSTALL_PLUGINS=frser-sqlite-datasource
+    labels:
+    - "traefik.enable=true"  # tell Traefik this is something we would like to expose
+    - "traefik.http.routers.grafana.entrypoints=admin"  # what entrypoint should be used for the frontend service.
+    - "traefik.http.routers.grafana.rule=Host(`localhost`)"  # 
 
 volumes:
   sqlite:
