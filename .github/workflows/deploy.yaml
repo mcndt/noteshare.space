@@ -1,0 +1,27 @@
+name: Test and deploy server and webapp
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  # test:
+  #   name: Run tests
+  #   uses: mcndt/noteshare.space/.github/workflows/test.yaml@master
+  deploy:
+    name: Deploy
+    # needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/noteshare/noteshare.space
+            git pull origin master
+            docker compose -f docker-compose.server.yml build
+            docker compose -f docker-compose.server.yml up -d

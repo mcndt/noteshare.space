@@ -1,0 +1,38 @@
+name: Test server and webapp
+
+on:
+  workflow_call:
+    # inputs:
+    # secrets:
+  pull_request:
+    branches: [master]
+
+jobs:
+  test-server:
+    name: Server tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - uses: actions/checkout@v3
+      - name: Unit and integration tests
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - run: npm ci
+      - run: npm run test
+  test-webapp:
+    name: Webapp tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./webapp
+    steps:
+      - uses: actions/checkout@v3
+      - name: Unit and integration tests
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - run: npm ci
+      - run: npm run test
