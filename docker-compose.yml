@@ -47,6 +47,7 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"  # tell Traefik this is something we would like to expose
       - "traefik.http.routers.backend.entrypoints=web"  # what entrypoint should be used for the backend service.
@@ -64,10 +65,25 @@ services:
         - NODE_ENV=production
     depends_on:
       - backend
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"  # tell Traefik this is something we would like to expose
       - "traefik.http.routers.frontend.entrypoints=web"  # what entrypoint should be used for the frontend service.
       - "traefik.http.routers.frontend.rule=Host(`localhost`)"  # 
 
+  # grafana dashboard
+  grafana:
+      image: grafana/grafana:7.5.7
+      ports:
+        - 3000:3000
+      restart: unless-stopped
+      volumes:
+        - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+        - grafana-data:/var/lib/grafana
+        - sqlite:/database/
+      environment:
+        - GF_INSTALL_PLUGINS=frser-sqlite-datasource
+
 volumes:
   sqlite:
+  grafana-data:
