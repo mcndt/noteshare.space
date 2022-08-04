@@ -13,7 +13,7 @@
 	<span>-</span>
 	<a
 		class="underline"
-		href="https://github.com/mcndt/obsidian-note-sharing/issues/new?assignees=&labels=&template=bug_report.md&title=%5BBug%5D"
+		href="https://github.com/mcndt/noteshare.space/issues/new?assignees=&labels=&template=bug_report.md&title=%5BBug%5D"
 		>🐛 Report bug</a
 	>
 	<span>-</span>
