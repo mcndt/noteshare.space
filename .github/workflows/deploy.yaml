@@ -20,6 +20,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           port: 22
+          script_stop: true
           script: |
             cd /home/noteshare/noteshare.space
             git pull origin master
