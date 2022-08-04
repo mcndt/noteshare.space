@@ -5,12 +5,12 @@ on:
     branches: [master]
 
 jobs:
-  # test:
-  #   name: Run tests
-  #   uses: mcndt/noteshare.space/.github/workflows/test.yaml@master
+  test:
+    name: Run tests
+    uses: mcndt/noteshare.space/.github/workflows/test.yaml@master
   deploy:
     name: Deploy
-    # needs: [test]
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - name: Deploy using ssh
