@@ -6,6 +6,12 @@ I created this service largely for my own use, as I was tired of relying on thir
 
 ![Preview of a noteshare.space shared note](/img/preview.png)
 
+## Feedback
+
+The preferred way to report bugs or request new features for the web app or the Obsidian plugin is via the [GitHub issues page](https://github.com/mcndt/noteshare.space/issues/new/choose).
+
+If you want a more interactive way to discuss bugs or features, you can join the [Discord server](https://discord.gg/y3HqyGeABK).
+
 
 ## Local development
 
