@@ -11,12 +11,17 @@
 	get in touch with me.
 
 	<h2>Bugs and feature requests</h2>
-
-	The preferred way to report bugs or request new features for the web app or the Obsidian plugin is
-	via the
-	<a class="underline" href="https://github.com/mcndt/obsidian-note-sharing/issues"
-		>GitHub issues page</a
-	>.
+	<p>
+		The preferred way to report bugs or request new features for the web app or the Obsidian plugin
+		is via the
+		<a class="underline" href="https://github.com/mcndt/obsidian-note-sharing/issues"
+			>GitHub issues page</a
+		>.
+	</p>
+	<p>
+		If you want a more interactive way to discuss bugs or features, you can join the
+		<a href="https://discord.gg/y3HqyGeABK">Discord server</a>.
+	</p>
 
 	<h2>Questions about Noteshare.space</h2>
 	<p>
@@ -25,6 +30,7 @@
 			>contact@noteshare.space</a
 		>.
 	</p>
+
 	<h2>Get to know me!</h2>
 	<p>
 		I’m a computer science engineer with interest in a wide range of topics, including productivity,
