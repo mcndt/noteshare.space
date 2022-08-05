@@ -40,6 +40,7 @@
 					<svelte:fragment slot="left">
 						<NavBarLink href="/about">How it works</NavBarLink>
 						<NavBarLink href="/install">Get plugin</NavBarLink>
+						<NavBarLink href="/contact">Contact</NavBarLink>
 					</svelte:fragment>
 					<svelte:fragment slot="right">
 						<NavBarLink href="https://obsidian.md"
