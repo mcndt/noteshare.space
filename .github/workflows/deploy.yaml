@@ -11,6 +11,9 @@ jobs:
   deploy:
     name: Deploy
     needs: [test]
+    environment:
+      name: production
+      url: https://noteshare.space
     runs-on: ubuntu-latest
     steps:
       - name: Deploy using ssh
