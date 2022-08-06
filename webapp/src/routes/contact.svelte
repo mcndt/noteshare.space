@@ -1,3 +1,7 @@
+<script context="module">
+	export const prerender = true;
+</script>
+
 <svelte:head>
 	<title>Contact | {import.meta.env.VITE_BRANDING}</title>
 </svelte:head>

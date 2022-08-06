@@ -1,3 +1,7 @@
+<script context="module">
+	export const prerender = true;
+</script>
+
 <script>
 	import Tile from '$lib/components/index/tile.svelte';
 </script>

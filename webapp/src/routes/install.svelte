@@ -1,3 +1,7 @@
+<script context="module">
+	export const prerender = true;
+</script>
+
 <svelte:head>
 	<title>Get the plugin | {import.meta.env.VITE_BRANDING}</title>
 	<script src="https://tarptaeya.github.io/repo-card/repo-card.js"></script>
@@ -28,7 +32,7 @@
 </div>
 
 <a href="https://github.com/mcndt/obsidian-note-sharing"
-	><img src="https://gh-card.dev/repos/mcndt/obsidian-note-sharing.svg" /></a
+	><img src="https://gh-card.dev/repos/mcndt/obsidian-note-sharing.svg" alt="github-repo-card" /></a
 >
 <div class="flex gap-2 mt-2">
 	<a href="https://github.com/mcndt/obsidian-note-sharing/releases">
