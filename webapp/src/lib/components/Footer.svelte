@@ -9,7 +9,8 @@
 	<span>-</span>
 	<a class="underline" href="/about">About</a>
 	<span>-</span>
-
+	<a class="underline" href="/changelog">Changelog</a>
+	<span>-</span>
 	<a class="underline" href="/contact">Contact</a>
 	<span>-</span>
 	<a class="underline" href="https://discord.gg/y3HqyGeABK">Discord</a>
