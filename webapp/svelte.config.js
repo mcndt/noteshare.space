@@ -16,6 +16,9 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		vite: {
+			optimizeDeps: {
+				include: ['highlight.js', 'highlight.js/lib/core']
+			},
 			plugins: [markdown({ mode: ['html', 'toc'] })],
 			test: {
 				globals: true,
