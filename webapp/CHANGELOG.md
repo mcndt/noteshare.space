@@ -2,6 +2,7 @@
 
 ## [2022-08-07]
 
+- fix: 🐛 collapsed/uncollapsed callout syntax now correctly renders as a callout block instead of a block quote.
 - fix: 🐛 text highlights (`==highlight==` syntax) are now more legibile in dark mode.
 - fix: 🐛 code blocks no longer render as "undefined" for unregistered languages (e.g. Dataview or Toggl query blocks).
 

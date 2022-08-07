@@ -12,10 +12,10 @@
 
 	$: if (content) {
 		const titleElement = content.getElementsByTagName('p')[0];
-		const match = titleElement.innerText.split('\n')[0].match(/\[!(.+)\](?:\s(.+))?/);
+		const match = titleElement.innerText.split('\n')[0].match(/\[!(.+)\]([+-]?)(?:\s(.+))?/);
 		if (match) {
 			type = match[1]?.trim();
-			title = match[2]?.trim() ?? type[0].toUpperCase() + type.substring(1).toLowerCase();
+			title = match[3]?.trim() ?? type[0].toUpperCase() + type.substring(1).toLowerCase();
 		}
 
 		color = `--${getCalloutColor(type)}`;
