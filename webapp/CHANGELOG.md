@@ -1,6 +1,10 @@
 # Changelog
 
+## [2022-08-07]
+
+- fix: 🐛 code blocks no longer render as "undefined" for unregistered languages (e.g. Dataview or Toggl query blocks)
+
 ## [2022-08-06]
 
-- Added a changelog page.
-- Added syntax highlighting for code blocks in the 36 most common languages (see [highlight.js](https://highlightjs.org/download/) for the full list).
+- feat: ✨ Added a changelog page.
+- feat: ✨ Added syntax highlighting for code blocks in the 36 most common languages (see [highlight.js](https://highlightjs.org/download/) for the full list).
