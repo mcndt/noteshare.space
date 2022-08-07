@@ -13,20 +13,15 @@
 
 	onMount(() => {
 		if (browser) {
-			highlighted = hljs.highlight(text, { language: lang }).value;
+			if (hljs.getLanguage(lang) !== undefined) {
+				highlighted = hljs.highlight(text, { language: lang }).value;
+			} else {
+				highlighted = text;
+			}
 		}
 	});
 </script>
 
-<svelte:head>
-	<!-- <link
-		rel="stylesheet"
-		href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github-dark.min.css"
-	/> -->
-</svelte:head>
-
 <div class="">
-	<!-- <pre class="language-{lang}"><code>{text}</code></pre> -->
-
 	<pre class="language-{lang}"><code>{@html highlighted}</code></pre>
 </div>
