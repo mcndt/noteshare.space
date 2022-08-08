@@ -17,3 +17,15 @@ model EncryptedNote {
   ciphertext  String
   hmac        String
 }
+
+model event {
+  id                 Int      @id @default(autoincrement())
+  time               DateTime @default(now())
+  type               String
+  success            Boolean
+  size_bytes         Int?
+  purge_count        Int?
+  host               String?
+  error              String?
+  expire_window_days Int?
+}
