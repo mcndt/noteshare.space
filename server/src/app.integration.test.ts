@@ -2,6 +2,7 @@ import app, { cleanExpiredNotes } from "./app";
 import request from "supertest";
 import { describe, it, expect } from "vitest";
 import prisma from "./client";
+import { EventType } from "./EventLogger";
 
 // const testNote with base64 ciphertext and hmac
 const testNote = {
@@ -29,6 +30,16 @@ describe("GET /api/note", () => {
     expect(res.body.id).toEqual(id);
     expect(res.body.ciphertext).toEqual(testNote.ciphertext);
     expect(res.body.hmac).toEqual(testNote.hmac);
+
+    // Is a read event logged?
+    const readEvents = await prisma.event.findMany({
+      where: { type: EventType.READ, note_id: id },
+    });
+    expect(readEvents.length).toBe(1);
+    expect(readEvents[0].success).toBe(true);
+    expect(readEvents[0].size_bytes).toBe(
+      res.body.ciphertext.length + res.body.hmac.length
+    );
   });
 
   it("responds 404 for invalid ID", async () => {
@@ -37,6 +48,13 @@ describe("GET /api/note", () => {
 
     // Validate returned note
     expect(res.statusCode).toBe(404);
+
+    // Is a read event logged?
+    const readEvents = await prisma.event.findMany({
+      where: { type: EventType.READ, note_id: "NaN" },
+    });
+    expect(readEvents.length).toBe(1);
+    expect(readEvents[0].success).toBe(false);
   });
 
   it("Applies rate limits to endpoint", async () => {
@@ -76,6 +94,17 @@ describe("POST /api/note", () => {
     // A future expiry date is assigned
     expect(new Date(res.body.expire_time).getTime()).toBeGreaterThan(
       new Date().getTime()
+    );
+
+    // Is a write event logged?
+    const writeEvents = await prisma.event.findMany({
+      where: { type: EventType.WRITE, note_id: res.body.id },
+    });
+    expect(writeEvents.length).toBe(1);
+    expect(writeEvents[0].success).toBe(true);
+    expect(writeEvents[0].expire_window_days).toBe(30);
+    expect(writeEvents[0].size_bytes).toBe(
+      testNote.ciphertext.length + testNote.hmac.length
     );
   });
 
@@ -123,7 +152,7 @@ describe("POST /api/note", () => {
   it("Applies rate limits to endpoint", async () => {
     // make more requests than the post limit set in .env.test
     const requests = [];
-    for (let i = 0; i < 51; i++) {
+    for (let i = 0; i < 52; i++) {
       requests.push(request(app).post("/api/note").send(testNote));
     }
     const responses = await Promise.all(requests);
@@ -158,5 +187,18 @@ describe("Clean expired notes", () => {
     // make sure note is gone
     res = await request(app).get(`/api/note/${id}`);
     expect(res.statusCode).toBe(404);
+
+    // sleep 100ms to allow all events to be logged
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    // Is a delete event logged?
+    const deleteEvents = await prisma.event.findMany({
+      where: { type: EventType.PURGE, note_id: id },
+    });
+    expect(deleteEvents.length).toBe(1);
+    expect(deleteEvents[0].success).toBe(true);
+    expect(deleteEvents[0].size_bytes).toBe(
+      testNote.ciphertext.length + testNote.hmac.length
+    );
   });
 });
