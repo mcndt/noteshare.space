@@ -10,6 +10,7 @@ import prisma from "./client";
 import bodyParser from "body-parser";
 import { NotePostRequest } from "./model/NotePostRequest";
 import { validateOrReject } from "class-validator";
+import EventLogger from "./EventLogger";
 
 // Initialize middleware clients
 const app: Express = express();
@@ -55,13 +56,34 @@ app.get("/api/note/:id", getLimiter, (req: Request, res: Response, next) => {
     .findUnique({
       where: { id: req.params.id },
     })
-    .then((note) => {
+    .then(async (note) => {
       if (note != null) {
+        await EventLogger.readEvent({
+          success: true,
+          host: req.hostname,
+          note_id: note.id,
+          size_bytes: note.ciphertext.length + note.hmac.length,
+        });
         res.send(note);
+      } else {
+        await EventLogger.readEvent({
+          success: false,
+          host: req.hostname,
+          note_id: req.params.id,
+          error: "Note not found",
+        });
+        res.status(404).send();
       }
-      res.status(404).send();
     })
-    .catch(next);
+    .catch(async (err) => {
+      await EventLogger.readEvent({
+        success: false,
+        host: req.hostname,
+        note_id: req.params.id,
+        error: err.message,
+      });
+      next(err);
+    });
 });
 
 // Post new encrypted note
@@ -72,34 +94,67 @@ app.post("/api/note/", postLimiter, (req: Request, res: Response, next) => {
     res.status(400).send(err.message);
   });
   const note = notePostRequest as EncryptedNote;
+  const EXPIRE_WINDOW_DAYS = 30;
   prisma.encryptedNote
     .create({
       data: {
         ...note,
-        expire_time: addDays(new Date(), 30),
+        expire_time: addDays(new Date(), EXPIRE_WINDOW_DAYS),
       },
     })
-    .then((savedNote) => {
+    .then(async (savedNote) => {
+      await EventLogger.writeEvent({
+        success: true,
+        host: req.hostname,
+        note_id: savedNote.id,
+        size_bytes: savedNote.ciphertext.length + savedNote.hmac.length,
+        expire_window_days: EXPIRE_WINDOW_DAYS,
+      });
       res.json({
         view_url: `${process.env.FRONTEND_URL}/note/${savedNote.id}`,
         expire_time: savedNote.expire_time,
       });
     })
-    .catch(next);
+    .catch(async (err) => {
+      await EventLogger.writeEvent({
+        success: false,
+        host: req.hostname,
+        error: err.message,
+      });
+      next(err);
+    });
 });
 
 // Clean up expired notes periodically
 export async function cleanExpiredNotes(): Promise<number> {
   logger.info("[Cleanup] Cleaning up expired notes...");
+
+  const toDelete = await prisma.encryptedNote.findMany({
+    where: {
+      expire_time: {
+        lte: new Date(),
+      },
+    },
+  });
+
   return prisma.encryptedNote
     .deleteMany({
-      where: {
-        expire_time: {
-          lte: new Date(),
-        },
-      },
+      where: { id: { in: toDelete.map((note) => note.id) } },
     })
-    .then((deleted) => {
+    .then(async (deleted) => {
+      const logs = toDelete.map(async (note) => {
+        logger.info(
+          `[Cleanup] Deleted note ${note.id} with size ${
+            note.ciphertext.length + note.hmac.length
+          } bytes`
+        );
+        return EventLogger.purgeEvent({
+          success: true,
+          note_id: note.id,
+          size_bytes: note.ciphertext.length + note.hmac.length,
+        });
+      });
+      await Promise.all(logs);
       logger.info(`[Cleanup] Deleted ${deleted.count} expired notes.`);
       return deleted.count;
     })
