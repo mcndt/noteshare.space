@@ -1,9 +1,14 @@
 import type { EncryptedNote } from '$lib/model/EncryptedNote';
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const get: RequestHandler = async ({ params }) => {
+export const get: RequestHandler = async ({ request, clientAddress, params }) => {
+	const ip = (request.headers.get('x-forwarded-for') || clientAddress) as string;
 	const url = `${import.meta.env.VITE_SERVER_INTERNAL}/api/note/${params.id}`;
-	const response = await fetch(url);
+	const response = await fetch(url, {
+		headers: {
+			'x-forwarded-for': ip
+		}
+	});
 
 	if (response.ok) {
 		try {

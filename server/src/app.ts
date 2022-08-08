@@ -52,6 +52,8 @@ app.use(bodyParser.json({ limit: "400k" }));
 
 // Get encrypted note
 app.get("/api/note/:id", getLimiter, (req: Request, res: Response, next) => {
+  const ip = (req.headers["x-forwarded-for"] ||
+    req.socket.remoteAddress) as string;
   prisma.encryptedNote
     .findUnique({
       where: { id: req.params.id },
@@ -60,7 +62,7 @@ app.get("/api/note/:id", getLimiter, (req: Request, res: Response, next) => {
       if (note != null) {
         await EventLogger.readEvent({
           success: true,
-          host: req.hostname,
+          host: ip,
           note_id: note.id,
           size_bytes: note.ciphertext.length + note.hmac.length,
         });
@@ -68,7 +70,7 @@ app.get("/api/note/:id", getLimiter, (req: Request, res: Response, next) => {
       } else {
         await EventLogger.readEvent({
           success: false,
-          host: req.hostname,
+          host: ip,
           note_id: req.params.id,
           error: "Note not found",
         });
@@ -78,7 +80,7 @@ app.get("/api/note/:id", getLimiter, (req: Request, res: Response, next) => {
     .catch(async (err) => {
       await EventLogger.readEvent({
         success: false,
-        host: req.hostname,
+        host: ip,
         note_id: req.params.id,
         error: err.message,
       });
@@ -88,6 +90,8 @@ app.get("/api/note/:id", getLimiter, (req: Request, res: Response, next) => {
 
 // Post new encrypted note
 app.post("/api/note/", postLimiter, (req: Request, res: Response, next) => {
+  const ip = (req.headers["x-forwarded-for"] ||
+    req.socket.remoteAddress) as string;
   const notePostRequest = new NotePostRequest();
   Object.assign(notePostRequest, req.body);
   validateOrReject(notePostRequest).catch((err) => {
@@ -105,7 +109,7 @@ app.post("/api/note/", postLimiter, (req: Request, res: Response, next) => {
     .then(async (savedNote) => {
       await EventLogger.writeEvent({
         success: true,
-        host: req.hostname,
+        host: ip,
         note_id: savedNote.id,
         size_bytes: savedNote.ciphertext.length + savedNote.hmac.length,
         expire_window_days: EXPIRE_WINDOW_DAYS,
@@ -118,7 +122,7 @@ app.post("/api/note/", postLimiter, (req: Request, res: Response, next) => {
     .catch(async (err) => {
       await EventLogger.writeEvent({
         success: false,
-        host: req.hostname,
+        host: ip,
         error: err.message,
       });
       next(err);
