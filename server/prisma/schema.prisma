@@ -24,7 +24,7 @@ model event {
   type               String
   success            Boolean
   size_bytes         Int?
-  purge_count        Int?
+  note_id            String?
   host               String?
   error              String?
   expire_window_days Int?

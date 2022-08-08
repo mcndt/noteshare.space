@@ -14,20 +14,20 @@ interface Event {
 
 interface ClientEvent extends Event {
   host: string;
-  size_bytes: number;
   success: boolean;
+  note_id?: string;
+  size_bytes?: number;
 }
 
 interface WriteEvent extends ClientEvent {
-  expire_window_days: number;
+  expire_window_days?: number;
 }
 
 interface ReadEvent extends ClientEvent {}
 
 interface PurgeEvent extends Event {
-  success: boolean;
-  purge_count: number;
-  size_bytes: number;
+  note_id: string;
+  size_bytes?: number;
 }
 
 export default class EventLogger {
