@@ -76,6 +76,8 @@ The compose configuration will:
 4. Automatically run `prisma migrate deploy` to keep the database schema up-to-date.
 5. Start the storage service and web application after succesfuly database migration.
 
+The docker-compose.yml file is suited for testing on a Windows-based system. If you are running locally on Linux or deploying to a server, you will have to change some of the configuration in the Compose file. See [this thread](https://github.com/mcndt/noteshare.space/issues/15) for more info.
+
 ## Environment variables
 
 Both the **webapp** and **server** have use environment variables for configuration.
