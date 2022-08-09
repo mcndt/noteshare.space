@@ -1,8 +1,9 @@
-import app, { cleanExpiredNotes } from "./app";
-import request from "supertest";
+import { app } from "./app";
+import supertest from "supertest";
 import { describe, it, expect } from "vitest";
-import prisma from "./client";
-import { EventType } from "./EventLogger";
+import prisma from "./db/client";
+import { cleanExpiredNotes } from "./tasks/deleteExpiredNotes";
+import { EventType } from "./logging/EventLogger";
 
 // const testNote with base64 ciphertext and hmac
 const testNote = {
@@ -18,7 +19,7 @@ describe("GET /api/note", () => {
     });
 
     // Make get request
-    const res = await request(app).get(`/api/note/${id}`);
+    const res = await supertest(app).get(`/api/note/${id}`);
 
     // Validate returned note
     expect(res.statusCode).toBe(200);
@@ -44,7 +45,7 @@ describe("GET /api/note", () => {
 
   it("responds 404 for invalid ID", async () => {
     // Make get request
-    const res = await request(app).get(`/api/note/NaN`);
+    const res = await supertest(app).get(`/api/note/NaN`);
 
     // Validate returned note
     expect(res.statusCode).toBe(404);
@@ -66,7 +67,7 @@ describe("GET /api/note", () => {
     // Make get requests
     const requests = [];
     for (let i = 0; i < 51; i++) {
-      requests.push(request(app).get(`/api/note/${id}`));
+      requests.push(supertest(app).get(`/api/note/${id}`));
     }
     const responses = await Promise.all(requests);
     const responseCodes = responses.map((res) => res.statusCode);
@@ -81,7 +82,7 @@ describe("GET /api/note", () => {
 
 describe("POST /api/note", () => {
   it("returns a view_url on correct POST body", async () => {
-    const res = await request(app).post("/api/note").send(testNote);
+    const res = await supertest(app).post("/api/note").send(testNote);
     expect(res.statusCode).toBe(200);
 
     // Returned body has correct fields
@@ -109,13 +110,13 @@ describe("POST /api/note", () => {
   });
 
   it("Returns a bad request on invalid POST body", async () => {
-    const res = await request(app).post("/api/note").send({});
+    const res = await supertest(app).post("/api/note").send({});
     expect(res.statusCode).toBe(400);
   });
 
   it("returns a valid view_url on correct POST body", async () => {
     // Make post request
-    let res = await request(app).post("/api/note").send(testNote);
+    let res = await supertest(app).post("/api/note").send(testNote);
 
     // Extract note id from post response
     expect(res.statusCode).toBe(200);
@@ -126,7 +127,7 @@ describe("POST /api/note", () => {
     const note_id = (match as RegExpMatchArray)[1];
 
     // Make get request
-    res = await request(app).get(`/api/note/${note_id}`);
+    res = await supertest(app).get(`/api/note/${note_id}`);
 
     // Validate returned note
     expect(res.statusCode).toBe(200);
@@ -140,12 +141,12 @@ describe("POST /api/note", () => {
     expect(res.body.hmac).toEqual(testNote.hmac);
   });
 
-  it("Applies upload limit to endpoint of 400kb", async () => {
+  it("Applies upload limit to endpoint of 500kb", async () => {
     const largeNote = {
-      ciphertext: "a".repeat(400 * 1024),
+      ciphertext: "a".repeat(500 * 1024),
       hmac: "sample_hmac",
     };
-    const res = await request(app).post("/api/note").send(largeNote);
+    const res = await supertest(app).post("/api/note").send(largeNote);
     expect(res.statusCode).toBe(413);
   });
 
@@ -153,7 +154,7 @@ describe("POST /api/note", () => {
     // make more requests than the post limit set in .env.test
     const requests = [];
     for (let i = 0; i < 51; i++) {
-      requests.push(request(app).post("/api/note").send(testNote));
+      requests.push(supertest(app).post("/api/note").send(testNote));
     }
     const responses = await Promise.all(requests);
     const responseCodes = responses.map((res) => res.statusCode);
@@ -177,7 +178,7 @@ describe("Clean expired notes", () => {
     });
 
     // make request for note and check that response is 200
-    let res = await request(app).get(`/api/note/${id}`);
+    let res = await supertest(app).get(`/api/note/${id}`);
     expect(res.statusCode).toBe(200);
 
     // run cleanup
@@ -185,7 +186,7 @@ describe("Clean expired notes", () => {
     expect(nDeleted).toBeGreaterThan(0);
 
     // make sure note is gone
-    res = await request(app).get(`/api/note/${id}`);
+    res = await supertest(app).get(`/api/note/${id}`);
     expect(res.statusCode).toBe(404);
 
     // sleep 100ms to allow all events to be logged

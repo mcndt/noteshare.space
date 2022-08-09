@@ -1,6 +1,6 @@
 import "dotenv/config";
-import logger from "./src/logger";
-import app from "./src/app";
+import logger from "./logging/logger";
+import { app } from "./app";
 
 // start the Express server
 app.listen(process.env.PORT, () => {

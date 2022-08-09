@@ -1,5 +1,5 @@
-import prisma from "./client";
 import { event } from "@prisma/client";
+import prisma from "../db/client";
 
 export enum EventType {
   WRITE = "WRITE",
