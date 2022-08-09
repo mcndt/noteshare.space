@@ -1,5 +1,9 @@
 # Changelog
 
+## [2022-08-11]
+
+- feat: ✨ Users receive a unique error page when opening expired notes vs. wrong URL. 
+
 ## [2022-08-07]
 
 - fix: 🐛 collapsed/uncollapsed callout syntax now correctly renders as a callout block instead of a block quote.

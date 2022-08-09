@@ -1,12 +1,9 @@
 import { deleteNotes, getExpiredNotes } from "../controllers/note/note.dao";
+import { getExpiredNoteFilter } from "../lib/expiredNoteFilter";
 import EventLogger from "../logging/EventLogger";
 import logger from "../logging/logger";
 
-export const cleanInterval =
-  Math.max(parseInt(<string>process.env.CLEANUP_INTERVAL_SECONDS) || 1, 1) *
-  1000;
-
-export async function cleanExpiredNotes(): Promise<number> {
+export async function deleteExpiredNotes(): Promise<number> {
   logger.info("[Cleanup] Cleaning up expired notes...");
   const toDelete = await getExpiredNotes();
 
@@ -25,6 +22,8 @@ export async function cleanExpiredNotes(): Promise<number> {
         });
       });
       await Promise.all(logs);
+      const filter = await getExpiredNoteFilter();
+      await filter.addNoteIds(toDelete.map((n) => n.id));
       logger.info(`[Cleanup] Deleted ${deleteCount} expired notes.`);
       return deleteCount;
     })
@@ -34,3 +33,7 @@ export async function cleanExpiredNotes(): Promise<number> {
       return -1;
     });
 }
+
+export const deleteInterval =
+  Math.max(parseInt(<string>process.env.CLEANUP_INTERVAL_SECONDS) || 1, 1) *
+  1000;
