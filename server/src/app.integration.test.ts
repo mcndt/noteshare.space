@@ -152,7 +152,7 @@ describe("POST /api/note", () => {
   it("Applies rate limits to endpoint", async () => {
     // make more requests than the post limit set in .env.test
     const requests = [];
-    for (let i = 0; i < 52; i++) {
+    for (let i = 0; i < 51; i++) {
       requests.push(request(app).post("/api/note").send(testNote));
     }
     const responses = await Promise.all(requests);
@@ -162,7 +162,7 @@ describe("POST /api/note", () => {
     expect(responseCodes).toContain(429);
 
     // sleep for 100 ms to allow rate limiter to reset
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 250));
   });
 });
 

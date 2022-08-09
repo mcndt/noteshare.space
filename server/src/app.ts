@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express, { Express, Request, Response } from "express";
 import { EncryptedNote } from "@prisma/client";
-import { addDays } from "./util";
+import { addDays, getConnectingIp } from "./util";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import pinoHttp from "pino-http";
@@ -52,8 +52,7 @@ app.use(bodyParser.json({ limit: "400k" }));
 
 // Get encrypted note
 app.get("/api/note/:id", getLimiter, (req: Request, res: Response, next) => {
-  const ip = (req.headers["x-forwarded-for"] ||
-    req.socket.remoteAddress) as string;
+  const ip = getConnectingIp(req);
   prisma.encryptedNote
     .findUnique({
       where: { id: req.params.id },
@@ -90,8 +89,8 @@ app.get("/api/note/:id", getLimiter, (req: Request, res: Response, next) => {
 
 // Post new encrypted note
 app.post("/api/note/", postLimiter, (req: Request, res: Response, next) => {
-  const ip = (req.headers["x-forwarded-for"] ||
-    req.socket.remoteAddress) as string;
+  const ip = getConnectingIp(req);
+
   const notePostRequest = new NotePostRequest();
   Object.assign(notePostRequest, req.body);
   validateOrReject(notePostRequest).catch((err) => {
@@ -132,7 +131,6 @@ app.post("/api/note/", postLimiter, (req: Request, res: Response, next) => {
 // Clean up expired notes periodically
 export async function cleanExpiredNotes(): Promise<number> {
   logger.info("[Cleanup] Cleaning up expired notes...");
-
   const toDelete = await prisma.encryptedNote.findMany({
     where: {
       expire_time: {
