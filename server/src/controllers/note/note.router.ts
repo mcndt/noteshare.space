@@ -21,6 +21,7 @@ const getRateLimit = rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
+// notesRoute.use(jsonParser, uploadLimit);
 notesRoute.use(jsonParser);
 notesRoute.post("", postRateLimit, postNoteController);
 notesRoute.get("/:id", getRateLimit, getNoteController);
