@@ -24,4 +24,4 @@ COPY --from=0 /app .
 ENV PORT 8080
 EXPOSE 8080
 
-CMD ["node", "./build/server.js"]
+CMD ["node", "./build/src/server.js"]
