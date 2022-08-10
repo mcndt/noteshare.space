@@ -10,3 +10,7 @@ server/.env
 *.sqlite
 *.sqlite-journal
 */**/coverage
+
+# production configuration
+docker-compose.server.yml
+/letsencrypt
