@@ -29,3 +29,8 @@ model event {
   error              String?
   expire_window_days Int?
 }
+
+model BloomFilter {
+  name             String @id
+  serializedFilter Bytes
+}

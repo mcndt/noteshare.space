@@ -109,7 +109,7 @@
 
 {#if decryptFailed}
 	<div class="prose max-w-2xl prose-zinc dark:prose-invert">
-		<h1>Error: Cannot decrypt file</h1>
+		<h1>Error: Cannot decrypt file 🔒</h1>
 		<p class="prose-xl">This note could not be decrypted with this link.</p>
 		<p class="prose-xl">
 			If you think this is an error, please double check that you copied the entire URL.

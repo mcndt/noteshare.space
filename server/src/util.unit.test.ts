@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { addDays } from "./util";
+import { addDays, getConnectingIp } from "./util";
 
 describe("addDays()", () => {
   it("Should add n days to the input date", () => {

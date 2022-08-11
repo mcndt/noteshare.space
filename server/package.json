@@ -6,7 +6,7 @@
   "scripts": {
     "test": "run-s test:db:reset test:test",
     "coverage": "run-s test:db:reset test:coverage",
-    "test-watch": "dotenv -e .env.test -- vitest unit --coverage",
+    "test-watch": "dotenv -v UNIT_TEST=TRUE  -e .env.test -- vitest unit",
     "test:test": "dotenv -e .env.test -- vitest run --no-threads",
     "test:coverage": "dotenv -e .env.test -- vitest run --no-threads --coverage",
     "test:db:reset": "dotenv -e .env.test -- npx prisma migrate reset -f",
@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@prisma/client": "^4.0.0",
+    "bloom-filters": "^3.0.0",
     "body-parser": "^1.20.0",
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.1",

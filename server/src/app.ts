@@ -4,7 +4,7 @@ import helmet from "helmet";
 import pinoHttp from "pino-http";
 import logger from "./logging/logger";
 import { notesRoute } from "./controllers/note/note.router";
-import { cleanExpiredNotes, cleanInterval } from "./tasks/deleteExpiredNotes";
+import { deleteExpiredNotes, deleteInterval } from "./tasks/deleteExpiredNotes";
 
 // Initialize middleware clients
 export const app: Express = express();
@@ -32,4 +32,4 @@ app.use(
 app.use("/api/note/", notesRoute);
 
 // Run periodic tasks
-setInterval(cleanExpiredNotes, cleanInterval);
+setInterval(deleteExpiredNotes, deleteInterval);

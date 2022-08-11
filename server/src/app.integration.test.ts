@@ -2,8 +2,10 @@ import { app } from "./app";
 import supertest from "supertest";
 import { describe, it, expect } from "vitest";
 import prisma from "./db/client";
-import { cleanExpiredNotes } from "./tasks/deleteExpiredNotes";
+import { deleteExpiredNotes } from "./tasks/deleteExpiredNotes";
 import { EventType } from "./logging/EventLogger";
+import { getFilter } from "./db/bloomFilter.dao";
+import { getExpiredNoteFilter } from "./lib/expiredNoteFilter";
 
 // const testNote with base64 ciphertext and hmac
 const testNote = {
@@ -182,12 +184,12 @@ describe("Clean expired notes", () => {
     expect(res.statusCode).toBe(200);
 
     // run cleanup
-    const nDeleted = await cleanExpiredNotes();
+    const nDeleted = await deleteExpiredNotes();
     expect(nDeleted).toBeGreaterThan(0);
 
-    // make sure note is gone
+    // if the note is added to the expire filter, it returns 410
     res = await supertest(app).get(`/api/note/${id}`);
-    expect(res.statusCode).toBe(404);
+    expect(res.statusCode).toBe(410);
 
     // sleep 100ms to allow all events to be logged
     await new Promise((resolve) => setTimeout(resolve, 200));
