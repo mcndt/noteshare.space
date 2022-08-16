@@ -1,5 +1,5 @@
 {
-	"name": "obsidian-note-sharing-webapp",
+	"name": "obsidian-quickshare-webapp",
 	"version": "0.0.1",
 	"description": "SvelteKit webapp for fetching, decrypting and rendering obsidian notes.",
 	"author": "Maxime Cannoodt (mcndt)",

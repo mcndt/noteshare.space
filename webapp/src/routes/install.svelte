@@ -17,8 +17,8 @@
 
 	<p>
 		To beta test, you can install the plugin using BRAT and the GitHub URL (<a
-			href="https://github.com/mcndt/obsidian-note-sharing"
-			>https://github.com/mcndt/obsidian-note-sharing</a
+			href="https://github.com/mcndt/obsidian-quickshare"
+			>https://github.com/mcndt/obsidian-quickshare</a
 		>) (see
 		<a
 			href="https://github.com/TfTHacker/obsidian42-brat#adding-a-beta-plugin) for further
@@ -27,23 +27,23 @@
 	</p>
 	<p>
 		Please report any problems you encounter in the plugin
-		<a href="https://github.com/mcndt/obsidian-note-sharing/issues">bug tracker</a>.
+		<a href="https://github.com/mcndt/obsidian-quickshare/issues">bug tracker</a>.
 	</p>
 </div>
 
-<a href="https://github.com/mcndt/obsidian-note-sharing"
-	><img src="https://gh-card.dev/repos/mcndt/obsidian-note-sharing.svg" alt="github-repo-card" /></a
+<a href="https://github.com/mcndt/obsidian-quickshare"
+	><img src="https://gh-card.dev/repos/mcndt/obsidian-quickshare.svg" alt="github-repo-card" /></a
 >
 <div class="flex gap-2 mt-2">
-	<a href="https://github.com/mcndt/obsidian-note-sharing/releases">
+	<a href="https://github.com/mcndt/obsidian-quickshare/releases">
 		<img
-			src="https://img.shields.io/github/v/tag/mcndt/obsidian-note-sharing"
+			src="https://img.shields.io/github/v/tag/mcndt/obsidian-quickshare"
 			alt="github-version-tag"
 		/>
 	</a>
-	<a href="https://github.com/mcndt/obsidian-note-sharing">
+	<a href="https://github.com/mcndt/obsidian-quickshare">
 		<img
-			src="https://img.shields.io/github/downloads/mcndt/obsidian-note-sharing/total"
+			src="https://img.shields.io/github/downloads/mcndt/obsidian-quickshare/total"
 			alt="github-downloads-tag"
 		/>
 	</a>

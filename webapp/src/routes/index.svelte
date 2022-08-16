@@ -73,8 +73,7 @@
 				<p slot="text">
 					Want to verify the security of the encryption mechanism? Or host your own instance?
 					Noteshare.space is completely <strong class="whitespace-nowrap"
-						><a class="underline" href="https://github.com/mcndt/obsidian-note-sharing"
-							>open-source</a
+						><a class="underline" href="https://github.com/mcndt/Noteshare.space">open-source</a
 						></strong
 					> under the MIT license.
 				</p>

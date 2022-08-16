@@ -21,7 +21,7 @@ Each subproject (plugin, server, and webapp) is its own npm package with its own
 | (root)
 |-- package.json
 |-- docker-compose.yml
-|-- plugin/        // (Obsidian plugin, as submodule at mcndt/obsidian-note-sharing)
+|-- plugin/        // (Obsidian plugin, as submodule at mcndt/obsidian-quickshare)
 	|-- package.json
 	|-- Dockerfile
 |-- server/        // (Express + Prisma + SQLite)
@@ -44,7 +44,7 @@ npm run dev
 
 Running the script starts a dev server for each, recompiling code on file changes. A reverse proxy (`proxy.js` in project root) runs the entire application at `http://localhost:5000`.
 
-If you want to contribute solely to the Obsidian plugin, please pull from the [obsidian-note-sharing](https://github.com/mcndt/obsidian-note-sharing) repo directly.
+If you want to contribute solely to the Obsidian plugin, please pull from the [obsidian-quickshare](https://github.com/mcndt/obsidian-quickshare) repo directly.
 
 Before you can store notes in the local development environment, you must migrate the local SQLite database (see next section).
 

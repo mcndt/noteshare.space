@@ -11,14 +11,14 @@
 
 	Hi! I'm
 	<a href="https://mcndt.dev">mcndt</a>
-	and I build the Obsidian note sharing plugin and operate Noteshare.space. There are several ways to
-	get in touch with me.
+	and I build the Obsidian QuickShare plugin and operate Noteshare.space. There are several ways to get
+	in touch with me.
 
 	<h2>Bugs and feature requests</h2>
 	<p>
 		The preferred way to report bugs or request new features for the web app or the Obsidian plugin
 		is via the
-		<a class="underline" href="https://github.com/mcndt/obsidian-note-sharing/issues"
+		<a class="underline" href="https://github.com/mcndt/obsidian-quickshare/issues"
 			>GitHub issues page</a
 		>.
 	</p>
@@ -30,7 +30,7 @@
 	<h2>Questions about Noteshare.space</h2>
 	<p>
 		For questions and inquiries about Noteshare.space (the "official" note hosting service for the
-		Obsidian note sharing plugin), please E-mail me at <a href="mailto:contact@noteshare.space"
+		Obsidian QuickShare plugin), please E-mail me at <a href="mailto:contact@noteshare.space"
 			>contact@noteshare.space</a
 		>.
 	</p>

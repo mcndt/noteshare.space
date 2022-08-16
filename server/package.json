@@ -1,5 +1,5 @@
 {
-  "name": "obsidian-note-sharing-server",
+  "name": "obsidian-quickshare-server",
   "version": "0.0.1",
   "description": "Express + SQLite3 + Prisma app for hosting encrypted notes.",
   "main": "server.js",
