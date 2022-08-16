@@ -2,11 +2,12 @@
 
 ## [2022-08-16]
 
-- fix: 🐛 Fix highlights not rendering correctly when mixed with other formatting.
+- fix: 🐛 Fix highlights not rendering correctly when mixed with other  formatting. ([issue #19](https://github.com/mcndt/noteshare.space/issues/19))
+- fix: 🐛 Fix some characters escaping the rendering for #tags. ([issue #10](https://github.com/mcndt/noteshare.space/issues/10))
 
 ## [2022-08-11]
 
-- feat: ✨ Users receive a unique error page when opening expired notes vs. wrong URL. 
+- feat: ✨ Users receive a unique error page when opening expired notes vs. wrong URL. ([issue #11](https://github.com/mcndt/noteshare.space/issues/11))
 
 ## [2022-08-07]
 

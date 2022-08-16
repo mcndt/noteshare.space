@@ -43,7 +43,7 @@ const TagExtension = {
 		return src.match(/#/)?.index;
 	},
 	tokenizer(src: string) {
-		const match = src.match(/^#([\w/]+)[\W\s]/);
+		const match = src.match(/^#([0-9A-Za-zÀ-ÖØ-öø-ÿ/_-]+)[\s\n]?/);
 		if (match) {
 			return {
 				type: 'tag',
