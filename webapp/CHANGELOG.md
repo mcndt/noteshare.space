@@ -1,5 +1,9 @@
 # Changelog
 
+## [2022-08-16]
+
+- fix: 🐛 Fix highlights not rendering correctly when mixed with other formatting.
+
 ## [2022-08-11]
 
 - feat: ✨ Users receive a unique error page when opening expired notes vs. wrong URL. 

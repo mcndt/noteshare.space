@@ -61,13 +61,16 @@ const HighlightExtension = {
 	start(src: string) {
 		return src.match(/==/)?.index;
 	},
-	tokenizer(src: string) {
+	tokenizer(src: string): any {
 		const match = src.match(/^==(.+)==/);
+		const text = match ? match[1].trim() : '';
 		if (match) {
 			return {
 				type: 'highlight',
 				raw: match[0].trim(),
-				text: match[1].trim()
+				text: text,
+				// @ts-expect-error - marked types are wrong
+				tokens: this.lexer.inlineTokens(text, [])
 			};
 		}
 		return false;
