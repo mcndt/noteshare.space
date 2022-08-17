@@ -38,7 +38,7 @@
 			<div class="top-0 left-0 right-0">
 				<NavBar>
 					<svelte:fragment slot="left">
-						<NavBarLink href="/about">How it works</NavBarLink>
+						<NavBarLink href="/about">About</NavBarLink>
 						<NavBarLink href="/install">Get plugin</NavBarLink>
 						<NavBarLink href="/contact">Contact</NavBarLink>
 					</svelte:fragment>

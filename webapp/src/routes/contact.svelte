@@ -22,17 +22,20 @@
 			>GitHub issues page</a
 		>.
 	</p>
-	<p>
-		If you want a more interactive way to discuss bugs or features, you can join the
-		<a href="https://discord.gg/y3HqyGeABK">Discord server</a>.
-	</p>
 
-	<h2>Questions about Noteshare.space</h2>
+	<h2>Inquiries about Noteshare.space</h2>
 	<p>
 		For questions and inquiries about Noteshare.space (the "official" note hosting service for the
 		Obsidian QuickShare plugin), please E-mail me at <a href="mailto:contact@noteshare.space"
 			>contact@noteshare.space</a
 		>.
+	</p>
+
+	<h2>Community</h2>
+	<p>
+		If you want a more interactive way to discuss bugs or features, or just want to chat about how
+		you use QuickShare and Noteshare.space, you can join the
+		<a href="https://discord.gg/y3HqyGeABK">Discord server</a>.
 	</p>
 
 	<h2>Get to know me!</h2>

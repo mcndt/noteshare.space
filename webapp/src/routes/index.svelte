@@ -10,19 +10,8 @@
 	<title>{import.meta.env.VITE_BRANDING} | Create share links for Obsidian in one click</title>
 </svelte:head>
 
-<!-- <div class="prose dark:prose-invert">
-	<h1>{import.meta.env.VITE_BRANDING}</h1>
-	<p class="prose-lg">
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-		laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-		voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-		non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-	</p>
-</div> -->
-
 <article class="mx-auto max-w-4xl text-zinc-900 dark:text-zinc-100">
-	<div class="space-y-6 pt-20 pb-24">
+	<div class="space-y-6 pt-20 pb-24 px-4 md:px-0">
 		<h1 id="title" class="font-extrabold text-4xl md:text-5xl text-center">
 			Securely share your <span class="text-[#705dcf]">Obsidian</span> notes with one click.
 		</h1>
@@ -41,7 +30,7 @@
 
 	<hr class="border-zinc-200 dark:border-zinc-700 transition-colors" />
 
-	<div class="space-y-8 pt-12 md:pt-24 md:pb-16">
+	<div class="space-y-8 py-12 md:pt-24 md:pb-16">
 		<div class="flex flex-row gap-4 mx-auto justify-center">
 			<Tile>
 				<h2 slot="title">End-to-end encrypted</h2>
@@ -79,6 +68,40 @@
 				</p>
 			</Tile>
 			<img src="/opensource.svg" alt="encrypted-art" class="w-80 hidden md:block" />
+		</div>
+	</div>
+
+	<hr class="border-zinc-200 dark:border-zinc-700 transition-colors" />
+
+	<div class="mt-12 mb-16 md:px-20">
+		<h2 class="text-2xl font-bold mb-8">Get in touch!</h2>
+		<div class="md:grid grid-cols-3 w-full gap-4">
+			<div class="dark:prose-invert w-full prose mb-4 md:mb-0 text-zinc-700 dark:text-zinc-300">
+				<h3 class="text-lg font-bold mb-4">Discord</h3>
+				<p class="">
+					Join the
+					<a href="https://discord.gg/y3HqyGeABK">Discord server</a> to discuss bugs and feature requests,
+					or just to say hi!
+				</p>
+			</div>
+			<div class="dark:prose-invert w-full prose mb-4 md:mb-0 text-zinc-700 dark:text-zinc-300">
+				<h3 class="text-lg font-bold mb-4">Bug reports</h3>
+				<p class="">
+					The preferred way to report bugs or request new features for the web app or the Obsidian
+					plugin is via the
+					<a class="underline" href="https://github.com/mcndt/obsidian-quickshare/issues"
+						>GitHub issues page</a
+					>.
+				</p>
+			</div>
+			<div class="dark:prose-invert w-full prose mb-4 md:mb-0 text-zinc-700 dark:text-zinc-300">
+				<h3 class="text-lg font-bold mb-4">Inquiries</h3>
+				<p class="">
+					For questions and inquiries about Noteshare.space, please contact me via <a
+						href="mailto:contact@noteshare.space">contact@noteshare.space</a
+					>.
+				</p>
+			</div>
 		</div>
 	</div>
 </article>
