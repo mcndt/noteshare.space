@@ -17,9 +17,11 @@ interface ClientEvent extends Event {
   success: boolean;
   note_id?: string;
   size_bytes?: number;
+  user_id?: string;
+  user_plugin_version?: string;
 }
 
-interface WriteEvent extends ClientEvent {
+export interface WriteEvent extends ClientEvent {
   expire_window_days?: number;
 }
 

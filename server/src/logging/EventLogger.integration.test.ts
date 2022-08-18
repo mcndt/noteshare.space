@@ -10,6 +10,8 @@ describe("Logging write events", () => {
       size_bytes: 100,
       success: true,
       expire_window_days: 30,
+      user_id: "test_user",
+      user_plugin_version: "1.0.0",
     };
 
     // Is event written successfully?

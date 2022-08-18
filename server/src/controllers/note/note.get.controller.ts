@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { getExpiredNoteFilter } from "../../lib/expiredNoteFilter";
 import EventLogger from "../../logging/EventLogger";
 import { getConnectingIp } from "../../util";
-import { getNote } from "./note.dao";
+import { getNote } from "../../db/note.dao";
 export async function getNoteController(
   req: Request,
   res: Response,

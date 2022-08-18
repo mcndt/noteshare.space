@@ -19,15 +19,17 @@ model EncryptedNote {
 }
 
 model event {
-  id                 Int      @id @default(autoincrement())
-  time               DateTime @default(now())
-  type               String
-  success            Boolean
-  size_bytes         Int?
-  note_id            String?
-  host               String?
-  error              String?
-  expire_window_days Int?
+  id                  Int      @id @default(autoincrement())
+  time                DateTime @default(now())
+  type                String
+  success             Boolean
+  size_bytes          Int?
+  note_id             String?
+  host                String?
+  error               String?
+  expire_window_days  Int?
+  user_id             String?
+  user_plugin_version String?
 }
 
 model BloomFilter {
