@@ -1,4 +1,4 @@
-import { deleteNotes, getExpiredNotes } from "../controllers/note/note.dao";
+import { deleteNotes, getExpiredNotes } from "../db/note.dao";
 import { getExpiredNoteFilter } from "../lib/expiredNoteFilter";
 import EventLogger from "../logging/EventLogger";
 import logger from "../logging/logger";

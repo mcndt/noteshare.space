@@ -1,5 +1,5 @@
 import { EncryptedNote } from "@prisma/client";
-import prisma from "../../db/client";
+import prisma from "./client";
 
 export async function getNote(noteId: string): Promise<EncryptedNote | null> {
   return prisma.encryptedNote.findUnique({

@@ -3,10 +3,7 @@ import { ExpiredNoteFilter } from "./expiredNoteFilter";
 import { ScalableBloomFilter } from "bloom-filters";
 
 import * as dao from "../db/bloomFilter.dao";
-vi.mock("../db/bloomFilter.dao", () => ({
-  getFilter: vi.fn(),
-  upsertFilter: vi.fn(),
-}));
+vi.mock("../db/bloomFilter.dao");
 
 describe("Deserialization from database", () => {
   afterEach(() => {

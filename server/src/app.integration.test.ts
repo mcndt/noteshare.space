@@ -4,8 +4,6 @@ import { describe, it, expect } from "vitest";
 import prisma from "./db/client";
 import { deleteExpiredNotes } from "./tasks/deleteExpiredNotes";
 import { EventType } from "./logging/EventLogger";
-import { getFilter } from "./db/bloomFilter.dao";
-import { getExpiredNoteFilter } from "./lib/expiredNoteFilter";
 
 // const testNote with base64 ciphertext and hmac
 const testNote = {
@@ -83,8 +81,12 @@ describe("GET /api/note", () => {
 });
 
 describe("POST /api/note", () => {
-  it("returns a view_url on correct POST body", async () => {
+  it("returns a view_url on correct POST body (without plugin version and user id)", async () => {
     const res = await supertest(app).post("/api/note").send(testNote);
+
+    if (res.statusCode !== 200) {
+      console.log(res.body);
+    }
     expect(res.statusCode).toBe(200);
 
     // Returned body has correct fields
@@ -162,7 +164,13 @@ describe("POST /api/note", () => {
     const responseCodes = responses.map((res) => res.statusCode);
 
     // at least one response should be 429
+    expect(responseCodes).toContain(200);
     expect(responseCodes).toContain(429);
+
+    // No other response codes should be present
+    expect(
+      responseCodes.map((code) => code === 429 || code === 200)
+    ).not.toContain(false);
 
     // sleep for 100 ms to allow rate limiter to reset
     await new Promise((resolve) => setTimeout(resolve, 250));

@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { deleteExpiredNotes } from "./deleteExpiredNotes";
-import * as noteDao from "../controllers/note/note.dao";
+import * as noteDao from "../db/note.dao";
 import EventLogger from "../logging/EventLogger";
 import logger from "../logging/logger";
 import * as filter from "../lib/expiredNoteFilter";
 
-vi.mock("../controllers/note/note.dao", () => ({
-  getExpiredNotes: vi.fn(),
-  deleteNotes: vi.fn(),
-}));
+// vi.mock("../db/note.dao", () => ({
+//   getExpiredNotes: vi.fn(),
+//   deleteNotes: vi.fn(),
+// }));
 
 vi.mock("../lib/expiredNoteFilter", () => {
   const instance = {
@@ -17,6 +17,7 @@ vi.mock("../lib/expiredNoteFilter", () => {
   return { getExpiredNoteFilter: () => instance };
 });
 
+vi.mock("../db/note.dao");
 vi.mock("../logging/EventLogger");
 
 vi.spyOn(logger, "error");
