@@ -117,11 +117,68 @@ const MathBlock = {
 	}
 };
 
+const footnoteRef = {
+	name: 'footnote-ref',
+	level: 'inline',
+	start(src: string) {
+		return src.indexOf('[^');
+	},
+
+	tokenizer(src: string) {
+		const match = src.match(/^\[\^([^\]]+)\]/);
+		if (match) {
+			return {
+				type: 'footnote-ref',
+				raw: match[0],
+				id: match[1].trim()
+			};
+		}
+		return false;
+	}
+};
+
+const footnote = {
+	name: 'footnote',
+	level: 'block',
+	start(src: string) {
+		return src.match(/^\[\^([^\]]+)\]:/)?.index;
+	},
+
+	tokenizer(src: string): any {
+		const matchFootnote = /^\[\^([^\]]+)\]: ?((?:[^\r\n]*))/;
+
+		const lines = src.split('\n');
+		const match = lines[0].match(matchFootnote);
+		if (match) {
+			// find all subsequent lines that are not a match with matchFootnote or blank
+			let i = 1;
+			while (i < lines.length && !lines[i].match(matchFootnote) && lines[i].trim() !== '') {
+				i++;
+			}
+			const raw = lines.slice(0, i).join('\n');
+
+			// const text equals raw without the [^id]: part
+			const text = raw.replace(/^\[\^([^\]]+)\]: ?/, '').trim();
+
+			return {
+				type: 'footnote',
+				raw: raw,
+				id: match[1].trim(),
+				// @ts-expect-error - marked types are wrong
+				tokens: this.lexer.blockTokens(text, [])
+			};
+		}
+		return false;
+	}
+};
+
 export default [
 	InternalLinkExtension,
 	InternalEmbedExtension,
 	TagExtension,
 	HighlightExtension,
 	MathBlock,
-	MathInline
+	MathInline,
+	footnoteRef,
+	footnote
 ];

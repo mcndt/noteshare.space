@@ -1,5 +1,8 @@
 # Changelog
 
+## [2022-08-23]
+
+- feat: ✨ Footnotes are rendered as they are in the Obsidian client.
 ## [2022-08-16]
 
 - fix: 🐛 Fix highlights not rendering correctly when mixed with other  formatting. ([issue #19](https://github.com/mcndt/noteshare.space/issues/19))
