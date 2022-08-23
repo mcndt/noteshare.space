@@ -15,14 +15,23 @@
 	import MathBlock from '$lib/marked/renderers/MathBlock.svelte';
 	import ListItem from '$lib/marked/renderers/ListItem.svelte';
 	import Code from '$lib/marked/renderers/Code.svelte';
+	import FootnoteRef from '$lib/marked/renderers/FootnoteRef.svelte';
+	import Footnote from '$lib/marked/renderers/Footnote.svelte';
 
 	export let plaintext: string;
 	let ref: HTMLDivElement;
+	let footnotes: HTMLDivElement[];
+	let footnoteContainer: HTMLDivElement;
 
 	// @ts-ignore: typing mismatch
 	marked.use({ extensions: extensions });
 
 	const options = { ...marked.defaults, breaks: true };
+
+	function onParsed() {
+		setTitle();
+		parseFootnotes();
+	}
 
 	/**
 	 * Searches for the first major header in the document to use as page title.
@@ -37,6 +46,19 @@
 			}
 		}
 	}
+
+	/*
+	 * find all elements inside "ref" that have the data-footnote attribute
+	 */
+	function parseFootnotes() {
+		footnotes = Array.from(ref.querySelectorAll('[data-footnote]'));
+	}
+
+	$: if (footnotes?.length > 0 && footnoteContainer) {
+		footnotes.forEach((footnote) => {
+			footnoteContainer.appendChild(footnote);
+		});
+	}
 </script>
 
 <div
@@ -47,7 +69,7 @@ prose-strong:font-bold prose-a:font-normal prose-blockquote:font-normal prose-bl
 prose-blockquote:first:before:content-[''] prose-hr:transition-colors"
 >
 	<SvelteMarkdown
-		on:parsed={setTitle}
+		on:parsed={onParsed}
 		renderers={{
 			heading: Heading,
 			list: List,
@@ -60,9 +82,17 @@ prose-blockquote:first:before:content-[''] prose-hr:transition-colors"
 			blockquote: Blockquote,
 			'math-inline': MathInline,
 			'math-block': MathBlock,
-			code: Code
+			code: Code,
+			'footnote-ref': FootnoteRef,
+			footnote: Footnote
 		}}
 		source={plaintext}
 		{options}
 	/>
+
+	<!-- footnote container -->
+	{#if footnotes?.length > 0}
+		<hr />
+		<div bind:this={footnoteContainer} />
+	{/if}
 </div>
