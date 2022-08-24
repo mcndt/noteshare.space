@@ -74,7 +74,7 @@ services:
 
   # grafana dashboard
   grafana:
-    image: grafana/grafana:7.5.7
+    image: grafana/grafana:9.1.0
     restart: unless-stopped
     volumes:
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
