@@ -33,6 +33,9 @@ export class NotePostRequest {
   @ValidateIf((o) => o.plugin_version != null)
   @Matches("^[0-9]+\\.[0-9]+\\.[0-9]+$")
   plugin_version: string | undefined;
+
+  @Matches("^v[0-9]+$")
+  crypto_version: string = "v1";
 }
 
 export async function postNoteController(
@@ -75,6 +78,7 @@ export async function postNoteController(
     ciphertext: notePostRequest.ciphertext as string,
     hmac: notePostRequest.hmac as string,
     expire_time: addDays(new Date(), EXPIRE_WINDOW_DAYS),
+    crypto_version: notePostRequest.crypto_version,
   } as EncryptedNote;
 
   // Store note object

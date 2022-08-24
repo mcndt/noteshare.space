@@ -15,6 +15,8 @@ const MALFORMED_VERSION = "v1.0.0";
 const VALID_USER_ID = "f06536e7df6857fc";
 const MALFORMED_ID_WRONG_CRC = "f06536e7df6857fd";
 const MALFORMED_ID_WRONG_LENGTH = "0";
+const VALID_CRYPTO_VERSION = "v99";
+const MALFORMED_CRYPTO_VERSION = "32";
 
 const MOCK_NOTE_ID = "1234";
 
@@ -36,7 +38,6 @@ const TEST_PAYLOADS: TestParams[] = [
   {
     payload: {
       ciphertext: VALID_CIPHERTEXT,
-
       hmac: VALID_HMAC,
       user_id: VALID_USER_ID,
       plugin_version: VALID_VERSION,
@@ -120,6 +121,28 @@ const TEST_PAYLOADS: TestParams[] = [
     },
     expectedStatus: 400,
   },
+  // Request with valid ciphertext, hmac, user id, plugin version, and crypto version
+  {
+    payload: {
+      ciphertext: VALID_CIPHERTEXT,
+      hmac: VALID_HMAC,
+      user_id: VALID_USER_ID,
+      plugin_version: VALID_VERSION,
+      crypto_version: VALID_CRYPTO_VERSION,
+    },
+    expectedStatus: 200,
+  },
+  // Request with malformed crypto version
+  {
+    payload: {
+      ciphertext: VALID_CIPHERTEXT,
+      hmac: VALID_HMAC,
+      user_id: VALID_USER_ID,
+      plugin_version: VALID_VERSION,
+      crypto_version: MALFORMED_CRYPTO_VERSION,
+    },
+    expectedStatus: 400,
+  },
 ];
 
 describe("note.post.controller", () => {
@@ -158,6 +181,19 @@ describe("note.post.controller", () => {
       expect(res.body).toHaveProperty("expire_time");
       expect(new Date(res.body.expire_time).getTime()).toBeGreaterThan(
         new Date().getTime()
+      );
+    }
+
+    // Validate DAO calls
+    if (expectedStatus === 200) {
+      expect(mockNoteDao.createNote).toHaveBeenCalledTimes(1);
+      expect(mockNoteDao.createNote).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ciphertext: payload.ciphertext,
+          hmac: payload.hmac,
+          crypto_version: payload.crypto_version || "v1",
+          expire_time: expect.any(Date),
+        })
       );
     }
 

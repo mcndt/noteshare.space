@@ -9,7 +9,8 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"types": ["vitest/globals", "@testing-library/jest-dom"]
+		"types": ["vitest/globals", "@testing-library/jest-dom"],
+		"typeRoots": ["./node_modules/@types", "./src/types"]
 	},
 	"paths": {
 		"$lib": ["src/lib"],
