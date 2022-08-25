@@ -5,20 +5,14 @@ import EventLogger from "../logging/EventLogger";
 import logger from "../logging/logger";
 import * as filter from "../lib/expiredNoteFilter";
 
-// vi.mock("../db/note.dao", () => ({
-//   getExpiredNotes: vi.fn(),
-//   deleteNotes: vi.fn(),
-// }));
-
+vi.mock("../db/note.dao");
+vi.mock("../logging/EventLogger");
 vi.mock("../lib/expiredNoteFilter", () => {
   const instance = {
     addNoteIds: vi.fn(),
   };
   return { getExpiredNoteFilter: () => instance };
 });
-
-vi.mock("../db/note.dao");
-vi.mock("../logging/EventLogger");
 
 vi.spyOn(logger, "error");
 
@@ -37,6 +31,7 @@ describe("deleteExpiredNotes", () => {
         hmac: "test",
         insert_time: new Date(),
         expire_time: new Date(),
+        crypto_version: "v1",
       },
     ]);
     mockedDao.deleteNotes.mockResolvedValue(1);
