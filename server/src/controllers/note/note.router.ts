@@ -5,7 +5,7 @@ import { postNoteController } from "./note.post.controller";
 
 export const notesRoute = express.Router();
 
-const jsonParser = express.json({ limit: "500k" });
+const jsonParser = express.json({ limit: "8MB" });
 
 const postRateLimit = rateLimit({
   windowMs: parseFloat(process.env.POST_LIMIT_WINDOW_SECONDS as string) * 1000,

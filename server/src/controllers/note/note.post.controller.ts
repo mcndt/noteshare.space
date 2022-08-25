@@ -12,7 +12,24 @@ import {
   ValidateIf,
   ValidationError,
   Matches,
+  ValidateNested,
+  IsString,
 } from "class-validator";
+import { Type } from "class-transformer";
+
+export class EncryptedEmbed {
+  @IsBase64()
+  @IsNotEmpty()
+  ciphertext: string | undefined;
+
+  @IsBase64()
+  @IsNotEmpty()
+  hmac: string | undefined;
+
+  @IsString()
+  @IsNotEmpty()
+  embedId: string | undefined;
+}
 
 /**
  * Request body for creating a note
@@ -36,6 +53,10 @@ export class NotePostRequest {
 
   @Matches("^v[0-9]+$")
   crypto_version: string = "v1";
+
+  @ValidateNested({ each: true })
+  @Type(() => EncryptedEmbed)
+  embeds: EncryptedEmbed[] = [];
 }
 
 export async function postNoteController(
