@@ -4,4 +4,5 @@ export type EncryptedNote = {
 	expire_time: Date;
 	ciphertext: string;
 	hmac: string;
+	crypto_version: string;
 };

@@ -11,11 +11,12 @@ datasource db {
 }
 
 model EncryptedNote {
-  id          String   @id @default(cuid())
-  insert_time DateTime @default(now())
-  expire_time DateTime @default(now())
-  ciphertext  String
-  hmac        String
+  id             String   @id @default(cuid())
+  insert_time    DateTime @default(now())
+  expire_time    DateTime @default(now())
+  ciphertext     String
+  hmac           String
+  crypto_version String   @default("v1")
 }
 
 model event {
