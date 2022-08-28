@@ -13,11 +13,11 @@ export function getConnectingIp(req: Request): string {
 }
 
 // base64 to array buffer (Node JS api, so don't use atob or btoa)
-export function base64ToArrayBuffer(base64: string): ArrayBuffer {
+export function base64ToBuffer(base64: string): Buffer {
   return Buffer.from(base64, "base64");
 }
 
 // array buffer to base64 (Node JS api, so don't use atob or btoa)
-export function arrayBufferToBase64(buffer: ArrayBuffer): string {
+export function BufferToBase64(buffer: Buffer): string {
   return Buffer.from(buffer).toString("base64");
 }

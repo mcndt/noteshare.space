@@ -28,6 +28,8 @@ model EncryptedEmbed {
   hmac       String
   size_bytes Int
   note       EncryptedNote @relation(fields: [note_id], references: [id])
+
+  @@unique([note_id, embed_id], name: "noteId_embedId")
 }
 
 model event {
