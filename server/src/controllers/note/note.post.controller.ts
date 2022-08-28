@@ -1,4 +1,4 @@
-import { EncryptedNote } from "@prisma/client";
+import { EncryptedNote, prisma } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { crc16 as crc } from "crc";
 import { createNote } from "../../db/note.dao";
@@ -17,7 +17,7 @@ import {
   ValidateNested,
 } from "class-validator";
 
-export class EncryptedEmbed {
+export class EncryptedEmbedBody {
   @IsBase64()
   @IsNotEmpty()
   ciphertext: string | undefined;
@@ -56,7 +56,7 @@ export class NotePostRequest {
 
   // validate the shape of each item manually, avoid need for class-transformer package
   @IsArray()
-  embeds: EncryptedEmbed[] = [];
+  embeds: EncryptedEmbedBody[] = [];
 }
 
 export async function postNoteController(
@@ -76,6 +76,13 @@ export async function postNoteController(
   Object.assign(notePostRequest, req.body);
   try {
     await validateOrReject(notePostRequest);
+    if (notePostRequest.embeds && notePostRequest.embeds.length > 0) {
+      for (const embed of notePostRequest.embeds) {
+        const embedBody = new EncryptedEmbedBody();
+        Object.assign(embedBody, embed);
+        await validateOrReject(embedBody);
+      }
+    }
   } catch (_err: any) {
     const err = _err as ValidationError;
     res.status(400).send(err.toString());
@@ -103,6 +110,7 @@ export async function postNoteController(
   } as EncryptedNote;
 
   // Store note object
+
   createNote(note)
     .then(async (savedNote) => {
       event.success = true;

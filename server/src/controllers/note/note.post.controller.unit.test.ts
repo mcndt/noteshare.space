@@ -2,10 +2,16 @@ import express from "express";
 import supertest from "supertest";
 import { vi, describe, it, beforeEach, afterEach, expect } from "vitest";
 import * as noteDao from "../../db/note.dao";
+import * as embedDao from "../../db/embed.dao";
 import EventLogger from "../../logging/EventLogger";
-import { NotePostRequest, postNoteController } from "./note.post.controller";
+import {
+  EncryptedEmbedBody,
+  NotePostRequest,
+  postNoteController,
+} from "./note.post.controller";
 
 vi.mock("../../db/note.dao");
+vi.mock("../../db/embed.dao");
 vi.mock("../../logging/EventLogger");
 
 const VALID_CIPHERTEXT = Buffer.from("sample_ciphertext").toString("base64");
@@ -19,8 +25,10 @@ const VALID_CRYPTO_VERSION = "v99";
 const MALFORMED_CRYPTO_VERSION = "32";
 
 const MOCK_NOTE_ID = "1234";
+const MOCK_EMBED_ID = "abcd";
 
 type TestParams = {
+  case: string;
   payload: Partial<NotePostRequest>;
   expectedStatus: number;
 };
@@ -28,6 +36,7 @@ type TestParams = {
 const TEST_PAYLOADS: TestParams[] = [
   // Request with valid ciphertext and hmac
   {
+    case: "valid ciphertext and hmac",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: VALID_HMAC,
@@ -36,6 +45,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with valid ciphertext, hmac, user id, and plugin version
   {
+    case: "valid ciphertext, hmac, user id, and plugin version",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: VALID_HMAC,
@@ -46,6 +56,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with non-base64 ciphertext
   {
+    case: "non-base64 ciphertext",
     payload: {
       ciphertext: "not_base64",
       hmac: VALID_HMAC,
@@ -54,6 +65,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with non-base64 hmac
   {
+    case: "non-base64 hmac",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: "not_base64",
@@ -62,6 +74,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with empty ciphertext
   {
+    case: "empty ciphertext",
     payload: {
       ciphertext: "",
       hmac: VALID_HMAC,
@@ -70,6 +83,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with empty hmac
   {
+    case: "empty hmac",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: "",
@@ -78,6 +92,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with valid user id
   {
+    case: "valid user id",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: VALID_HMAC,
@@ -87,6 +102,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with malformed user id (wrong crc)
   {
+    case: "malformed user id (wrong crc)",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: VALID_HMAC,
@@ -96,6 +112,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with malformed user id (wrong length)
   {
+    case: "malformed user id (wrong length)",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: VALID_HMAC,
@@ -105,6 +122,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with valid plugin version
   {
+    case: "valid plugin version",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: VALID_HMAC,
@@ -114,6 +132,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with malformed plugin version
   {
+    case: "malformed plugin version",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: VALID_HMAC,
@@ -123,6 +142,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with valid ciphertext, hmac, user id, plugin version, and crypto version
   {
+    case: "valid ciphertext, hmac, user id, plugin version, and crypto version",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: VALID_HMAC,
@@ -134,6 +154,7 @@ const TEST_PAYLOADS: TestParams[] = [
   },
   // Request with malformed crypto version
   {
+    case: "malformed crypto version",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: VALID_HMAC,
@@ -143,33 +164,157 @@ const TEST_PAYLOADS: TestParams[] = [
     },
     expectedStatus: 400,
   },
+  // Request with empty embeds array
+  {
+    case: "empty embeds array",
+    payload: {
+      ciphertext: VALID_CIPHERTEXT,
+      hmac: VALID_HMAC,
+      user_id: VALID_USER_ID,
+      plugin_version: VALID_VERSION,
+      crypto_version: VALID_CRYPTO_VERSION,
+      embeds: [],
+    },
+    expectedStatus: 200,
+  },
+  // Request with single valid embed
+  {
+    case: "valid embeds array",
+    payload: {
+      ciphertext: VALID_CIPHERTEXT,
+      hmac: VALID_HMAC,
+      user_id: VALID_USER_ID,
+      embeds: [
+        {
+          embedId: "0",
+          ciphertext: VALID_CIPHERTEXT,
+          hmac: VALID_HMAC,
+        },
+      ],
+    },
+    expectedStatus: 200,
+  },
+  // Request with embed with empty embedId
+  {
+    case: "embed with empty embedId",
+    payload: {
+      ciphertext: VALID_CIPHERTEXT,
+      hmac: VALID_HMAC,
+      user_id: VALID_USER_ID,
+      embeds: [
+        {
+          ciphertext: VALID_CIPHERTEXT,
+          hmac: VALID_HMAC,
+        } as EncryptedEmbedBody,
+      ],
+    },
+    expectedStatus: 400,
+  },
+  // Request with embed with non-base64 ciphertext
+  {
+    case: "embed with non-base64 ciphertext",
+    payload: {
+      ciphertext: VALID_CIPHERTEXT,
+      hmac: VALID_HMAC,
+      user_id: VALID_USER_ID,
+      embeds: [
+        {
+          ciphertext: "not_base64",
+          hmac: VALID_HMAC,
+          embedId: "0",
+        },
+      ],
+    },
+    expectedStatus: 400,
+  },
+  // Request with embed with non-base64 hmac
+  {
+    case: "embed with non-base64 hmac",
+    payload: {
+      ciphertext: VALID_CIPHERTEXT,
+      hmac: VALID_HMAC,
+      user_id: VALID_USER_ID,
+      embeds: [
+        {
+          ciphertext: VALID_CIPHERTEXT,
+          hmac: "not_base64",
+          embedId: "0",
+        },
+      ],
+    },
+    expectedStatus: 400,
+  },
+  // Request with duplicate embeds
+  {
+    case: "duplicate embeds",
+    payload: {
+      ciphertext: VALID_CIPHERTEXT,
+      hmac: VALID_HMAC,
+      user_id: VALID_USER_ID,
+      embeds: [
+        {
+          ciphertext: VALID_CIPHERTEXT,
+          hmac: VALID_HMAC,
+          embedId: "0",
+        },
+        {
+          ciphertext: VALID_CIPHERTEXT,
+          hmac: VALID_HMAC,
+          embedId: "0",
+        },
+      ],
+    },
+    expectedStatus: 400,
+  },
 ];
 
-describe("note.post.controller", () => {
+describe("Execute test cases", () => {
   let mockNoteDao = vi.mocked(noteDao);
+  let mockEmbedDao = vi.mocked(embedDao);
   let mockEventLogger = vi.mocked(EventLogger);
 
   const test_app = express().use(express.json()).post("/", postNoteController);
 
   beforeEach(() => {
     // database writes always succeed
+    const storedEmbeds: string[] = [];
+
     mockNoteDao.createNote.mockImplementation(async (note) => ({
       ...note,
       id: MOCK_NOTE_ID,
       insert_time: new Date(),
     }));
+    mockEmbedDao.createEmbed.mockImplementation(async (embed) => {
+      if (storedEmbeds.find((s) => s === embed.note_id + embed.embed_id)) {
+        throw new Error("duplicate embed!");
+      }
+      storedEmbeds.push(embed.note_id + embed.embed_id);
+      return {
+        ...embed,
+        ciphertext: Buffer.from(embed.ciphertext, "base64"),
+        id: MOCK_EMBED_ID,
+        size_bytes: embed.ciphertext.length,
+      };
+    });
   });
 
   afterEach(() => {
     vi.resetAllMocks();
   });
 
-  it.each(TEST_PAYLOADS)("test payloads", async (params) => {
+  it.each(TEST_PAYLOADS)("Case %#: $case", async (params) => {
     const { payload, expectedStatus } = params;
 
     // make request
     const res = await supertest(test_app).post("/").send(payload);
-    expect(res.status).toBe(expectedStatus);
+    try {
+      expect(res.status).toBe(expectedStatus);
+    } catch (e) {
+      throw new Error(`
+        Unexpected status ${res.status} (expected ${expectedStatus}): 
+        
+        Response body: ${res.text}`);
+    }
 
     // Validate reponse body
     if (expectedStatus === 200) {
