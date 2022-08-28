@@ -12,10 +12,10 @@ import {
   ValidateIf,
   ValidationError,
   Matches,
-  ValidateNested,
   IsString,
+  IsArray,
+  ValidateNested,
 } from "class-validator";
-import { Type } from "class-transformer";
 
 export class EncryptedEmbed {
   @IsBase64()
@@ -54,8 +54,8 @@ export class NotePostRequest {
   @Matches("^v[0-9]+$")
   crypto_version: string = "v1";
 
-  @ValidateNested({ each: true })
-  @Type(() => EncryptedEmbed)
+  // validate the shape of each item manually, avoid need for class-transformer package
+  @IsArray()
   embeds: EncryptedEmbed[] = [];
 }
 

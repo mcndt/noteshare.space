@@ -19,7 +19,6 @@
     "@prisma/client": "^4.0.0",
     "bloom-filters": "^3.0.0",
     "body-parser": "^1.20.0",
-    "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "crc": "^4.1.1",
     "dotenv": "^16.0.1",
