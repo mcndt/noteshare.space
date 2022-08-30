@@ -1,3 +1,4 @@
+import bodyParser from "body-parser";
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { getNoteController } from "./note.get.controller";
@@ -5,7 +6,8 @@ import { postNoteController } from "./note.post.controller";
 
 export const notesRoute = express.Router();
 
-const jsonParser = express.json({ limit: "8MB" });
+const jsonParser = express.json();
+const uploadLimit = bodyParser.json({ limit: "8mb" });
 
 const postRateLimit = rateLimit({
   windowMs: parseFloat(process.env.POST_LIMIT_WINDOW_SECONDS as string) * 1000,
@@ -22,6 +24,7 @@ const getRateLimit = rateLimit({
 });
 
 // notesRoute.use(jsonParser, uploadLimit);
+notesRoute.use(uploadLimit);
 notesRoute.use(jsonParser);
 notesRoute.post("", postRateLimit, postNoteController);
 notesRoute.get("/:id", getRateLimit, getNoteController);
