@@ -87,8 +87,24 @@ describe("GET /api/note", () => {
 });
 
 describe("POST /api/note", () => {
-  it("returns a view_url on correct POST body (without plugin version and user id)", async () => {
-    const res = await supertest(app).post("/api/note").send(testNote);
+  it("returns a view_url on correct POST body with embeds", async () => {
+    const res = await supertest(app)
+      .post("/api/note")
+      .send({
+        ...testNote,
+        embeds: [
+          {
+            embed_id: "sample_embed_id0",
+            ciphertext: Buffer.from("sample_ciphertext").toString("base64"),
+            hmac: Buffer.from("sample_hmac").toString("base64"),
+          },
+          {
+            embed_id: "sample_embed_id1",
+            ciphertext: Buffer.from("sample_ciphertext").toString("base64"),
+            hmac: Buffer.from("sample_hmac").toString("base64"),
+          },
+        ],
+      });
 
     expectCodeOrThrowResponse(res, 200);
 

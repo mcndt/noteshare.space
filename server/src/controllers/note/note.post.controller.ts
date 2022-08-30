@@ -96,7 +96,6 @@ export async function postNoteController(
 
   // Validate user ID, if present
   if (notePostRequest.user_id && !checkId(notePostRequest.user_id)) {
-    console.log("invalid user id");
     res.status(400).send("Invalid user id (checksum failed)");
     event.error = "Invalid user id (checksum failed)";
     EventLogger.writeEvent(event);
