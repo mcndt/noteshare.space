@@ -1,4 +1,4 @@
-import { EncryptedNote, prisma } from "@prisma/client";
+import { EncryptedNote, PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { crc16 as crc } from "crc";
 import { createNote } from "../../db/note.dao";
@@ -16,6 +16,8 @@ import {
   IsArray,
   ValidateNested,
 } from "class-validator";
+import prisma from "../../db/client";
+import { createEmbed, EncryptedEmbedDTO } from "../../db/embed.dao";
 
 export class EncryptedEmbedBody {
   @IsBase64()
@@ -28,7 +30,7 @@ export class EncryptedEmbedBody {
 
   @IsString()
   @IsNotEmpty()
-  embedId: string | undefined;
+  embed_id: string | undefined;
 }
 
 /**
@@ -73,6 +75,7 @@ export async function postNoteController(
 
   // Validate request body
   const notePostRequest = new NotePostRequest();
+  const noteEmbedRequests: EncryptedEmbedBody[] = [];
   Object.assign(notePostRequest, req.body);
   try {
     await validateOrReject(notePostRequest);
@@ -81,6 +84,7 @@ export async function postNoteController(
         const embedBody = new EncryptedEmbedBody();
         Object.assign(embedBody, embed);
         await validateOrReject(embedBody);
+        noteEmbedRequests.push(embedBody);
       }
     }
   } catch (_err: any) {
@@ -109,24 +113,62 @@ export async function postNoteController(
     crypto_version: notePostRequest.crypto_version,
   } as EncryptedNote;
 
-  // Store note object
+  // Store note object and possible embeds in database transaction
+  try {
+    const savedNote = await prisma.$transaction(async () => {
+      // 1. Save note
+      const savedNote = await createNote(note);
+
+      // 2. Store embeds
+      const embeds: EncryptedEmbedDTO[] = noteEmbedRequests.map(
+        (embed) =>
+          ({
+            ...embed,
+            note_id: savedNote.id,
+          } as EncryptedEmbedDTO)
+      );
+      embeds.forEach(async (embed) => {
+        await createEmbed(embed);
+      });
+
+      // 3. Finalize transaction
+      return savedNote;
+    });
+
+    // Log write event
+    event.success = true;
+    event.note_id = savedNote.id;
+    event.size_bytes = savedNote.ciphertext.length + savedNote.hmac.length;
+    event.expire_window_days = EXPIRE_WINDOW_DAYS;
+    await EventLogger.writeEvent(event);
+
+    // return HTTP request
+    res.json({
+      view_url: `${process.env.FRONTEND_URL}/note/${savedNote.id}`,
+      expire_time: savedNote.expire_time,
+    });
+  } catch (err: any) {
+    event.error = err.toString();
+    await EventLogger.writeEvent(event);
+    next(err);
+  }
 
   createNote(note)
     .then(async (savedNote) => {
-      event.success = true;
-      event.note_id = savedNote.id;
-      event.size_bytes = savedNote.ciphertext.length + savedNote.hmac.length;
-      event.expire_window_days = EXPIRE_WINDOW_DAYS;
-      await EventLogger.writeEvent(event);
-      res.json({
-        view_url: `${process.env.FRONTEND_URL}/note/${savedNote.id}`,
-        expire_time: savedNote.expire_time,
-      });
+      // event.success = true;
+      // event.note_id = savedNote.id;
+      // event.size_bytes = savedNote.ciphertext.length + savedNote.hmac.length;
+      // event.expire_window_days = EXPIRE_WINDOW_DAYS;
+      // await EventLogger.writeEvent(event);
+      // res.json({
+      //   view_url: `${process.env.FRONTEND_URL}/note/${savedNote.id}`,
+      //   expire_time: savedNote.expire_time,
+      // });
     })
     .catch(async (err) => {
-      event.error = err.toString();
-      await EventLogger.writeEvent(event);
-      next(err);
+      // event.error = err.toString();
+      // await EventLogger.writeEvent(event);
+      // next(err);
     });
 }
 

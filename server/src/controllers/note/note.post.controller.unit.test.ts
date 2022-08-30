@@ -186,7 +186,7 @@ const TEST_PAYLOADS: TestParams[] = [
       user_id: VALID_USER_ID,
       embeds: [
         {
-          embedId: "0",
+          embed_id: "0",
           ciphertext: VALID_CIPHERTEXT,
           hmac: VALID_HMAC,
         },
@@ -194,9 +194,9 @@ const TEST_PAYLOADS: TestParams[] = [
     },
     expectedStatus: 200,
   },
-  // Request with embed with empty embedId
+  // Request with embed with empty embed_id
   {
-    case: "embed with empty embedId",
+    case: "embed with empty embed_id",
     payload: {
       ciphertext: VALID_CIPHERTEXT,
       hmac: VALID_HMAC,
@@ -221,7 +221,7 @@ const TEST_PAYLOADS: TestParams[] = [
         {
           ciphertext: "not_base64",
           hmac: VALID_HMAC,
-          embedId: "0",
+          embed_id: "0",
         },
       ],
     },
@@ -238,7 +238,7 @@ const TEST_PAYLOADS: TestParams[] = [
         {
           ciphertext: VALID_CIPHERTEXT,
           hmac: "not_base64",
-          embedId: "0",
+          embed_id: "0",
         },
       ],
     },
@@ -255,12 +255,12 @@ const TEST_PAYLOADS: TestParams[] = [
         {
           ciphertext: VALID_CIPHERTEXT,
           hmac: VALID_HMAC,
-          embedId: "0",
+          embed_id: "0",
         },
         {
           ciphertext: VALID_CIPHERTEXT,
           hmac: VALID_HMAC,
-          embedId: "0",
+          embed_id: "0",
         },
       ],
     },
