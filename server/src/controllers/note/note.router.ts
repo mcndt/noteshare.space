@@ -1,6 +1,7 @@
 import bodyParser from "body-parser";
 import express from "express";
 import rateLimit from "express-rate-limit";
+import { embedsRoute } from "./embeds/embeds.router";
 import { getNoteController } from "./note.get.controller";
 import { postNoteController } from "./note.post.controller";
 
@@ -28,3 +29,4 @@ notesRoute.use(uploadLimit);
 notesRoute.use(jsonParser);
 notesRoute.post("", postRateLimit, postNoteController);
 notesRoute.get("/:id", getRateLimit, getNoteController);
+notesRoute.use("/:id/embeds/", embedsRoute);
