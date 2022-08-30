@@ -264,7 +264,7 @@ const TEST_PAYLOADS: TestParams[] = [
         },
       ],
     },
-    expectedStatus: 400,
+    expectedStatus: 409,
   },
 ];
 
@@ -279,15 +279,22 @@ describe("Execute test cases", () => {
     // database writes always succeed
     const storedEmbeds: string[] = [];
 
-    mockNoteDao.createNote.mockImplementation(async (note) => ({
-      ...note,
-      id: MOCK_NOTE_ID,
-      insert_time: new Date(),
-    }));
-    mockEmbedDao.createEmbed.mockImplementation(async (embed) => {
-      if (storedEmbeds.find((s) => s === embed.note_id + embed.embed_id)) {
-        throw new Error("duplicate embed!");
+    mockNoteDao.createNote.mockImplementation(async (note, embeds) => {
+      if (embeds && embeds.length > 0) {
+        for (const e of embeds) {
+          if (storedEmbeds.find((s) => s === MOCK_NOTE_ID + e.embed_id)) {
+            throw new Error("Duplicate embed");
+          }
+          storedEmbeds.push(MOCK_NOTE_ID + e.embed_id);
+        }
       }
+      return {
+        ...note,
+        id: MOCK_NOTE_ID,
+        insert_time: new Date(),
+      };
+    });
+    mockEmbedDao.createEmbed.mockImplementation(async (embed) => {
       storedEmbeds.push(embed.note_id + embed.embed_id);
       return {
         ...embed,
@@ -338,7 +345,8 @@ describe("Execute test cases", () => {
           hmac: payload.hmac,
           crypto_version: payload.crypto_version || "v1",
           expire_time: expect.any(Date),
-        })
+        }),
+        expect.arrayContaining(payload?.embeds ?? [])
       );
     }
 

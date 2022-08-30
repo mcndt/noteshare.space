@@ -17,20 +17,19 @@ import {
   ValidateNested,
 } from "class-validator";
 import prisma from "../../db/client";
-import { createEmbed, EncryptedEmbedDTO } from "../../db/embed.dao";
 
 export class EncryptedEmbedBody {
   @IsBase64()
   @IsNotEmpty()
-  ciphertext: string | undefined;
+  ciphertext!: string;
 
   @IsBase64()
   @IsNotEmpty()
-  hmac: string | undefined;
+  hmac!: string;
 
   @IsString()
   @IsNotEmpty()
-  embed_id: string | undefined;
+  embed_id!: string;
 }
 
 /**
@@ -115,25 +114,7 @@ export async function postNoteController(
 
   // Store note object and possible embeds in database transaction
   try {
-    const savedNote = await prisma.$transaction(async () => {
-      // 1. Save note
-      const savedNote = await createNote(note);
-
-      // 2. Store embeds
-      const embeds: EncryptedEmbedDTO[] = noteEmbedRequests.map(
-        (embed) =>
-          ({
-            ...embed,
-            note_id: savedNote.id,
-          } as EncryptedEmbedDTO)
-      );
-      embeds.forEach(async (embed) => {
-        await createEmbed(embed);
-      });
-
-      // 3. Finalize transaction
-      return savedNote;
-    });
+    const savedNote = await createNote(note, noteEmbedRequests);
 
     // Log write event
     event.success = true;
@@ -148,28 +129,15 @@ export async function postNoteController(
       expire_time: savedNote.expire_time,
     });
   } catch (err: any) {
+    // if the error matches "Duplicate embed", return a 409 conflict
     event.error = err.toString();
     await EventLogger.writeEvent(event);
-    next(err);
+    if (err.message.includes("Duplicate embed")) {
+      res.status(409).send(err.message);
+    } else {
+      next(err);
+    }
   }
-
-  createNote(note)
-    .then(async (savedNote) => {
-      // event.success = true;
-      // event.note_id = savedNote.id;
-      // event.size_bytes = savedNote.ciphertext.length + savedNote.hmac.length;
-      // event.expire_window_days = EXPIRE_WINDOW_DAYS;
-      // await EventLogger.writeEvent(event);
-      // res.json({
-      //   view_url: `${process.env.FRONTEND_URL}/note/${savedNote.id}`,
-      //   expire_time: savedNote.expire_time,
-      // });
-    })
-    .catch(async (err) => {
-      // event.error = err.toString();
-      // await EventLogger.writeEvent(event);
-      // next(err);
-    });
 }
 
 /**

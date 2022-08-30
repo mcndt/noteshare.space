@@ -56,7 +56,7 @@ describe("Reading and writing embeds", () => {
     };
 
     await createEmbed(embed); // embed 1
-    await expect(createEmbed(embed)).rejects.toThrowError(); // duplicate embed
+    await expect(createEmbed(embed)).rejects.toThrowError(/Duplicate embed/g); // duplicate embed
   });
 
   it("Should read embeds for existing note", async () => {

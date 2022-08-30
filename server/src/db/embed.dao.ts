@@ -1,4 +1,4 @@
-import { EncryptedEmbed } from "@prisma/client";
+import { EncryptedEmbed, Prisma, PrismaClient } from "@prisma/client";
 import { BufferToBase64, base64ToBuffer } from "../util";
 import prisma from "./client";
 
@@ -9,6 +9,12 @@ export interface EncryptedEmbedDTO {
   hmac: string;
 }
 
+/**
+ * Get an embed for a note by embed_id.
+ * @param noteId note id
+ * @param embedId embed id
+ * @returns encrypted embed (serialized ciphertext to base64)
+ */
 export async function getEmbed(
   noteId: string,
   embedId: string
@@ -24,8 +30,6 @@ export async function getEmbed(
 
   if (!embed) return null;
 
-  console.log(embed.ciphertext.byteLength, embed.size_bytes);
-
   return {
     note_id: embed.note_id,
     embed_id: embed.embed_id,
@@ -34,8 +38,15 @@ export async function getEmbed(
   };
 }
 
+/**
+ * Create an embed for a note.
+ * @param embed EncryptedEmbedDTO to serialize and save
+ * @param transactionClient optionally pass a TransactionClient object when running in a Prisma interactive transaction
+ * @returns the saved EncryptedEmbed (deserialized ciphertext to Buffer)
+ */
 export async function createEmbed(
-  embed: EncryptedEmbedDTO
+  embed: EncryptedEmbedDTO,
+  transactionClient: Prisma.TransactionClient = prisma
 ): Promise<EncryptedEmbed> {
   const cipher_buf = base64ToBuffer(embed.ciphertext);
   const data = {
@@ -45,5 +56,13 @@ export async function createEmbed(
     ciphertext: cipher_buf,
     size_bytes: cipher_buf.byteLength,
   } as EncryptedEmbed;
-  return prisma.encryptedEmbed.create({ data });
+  return transactionClient.encryptedEmbed.create({ data }).catch((err) => {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      // The .code property can be accessed in a type-safe manner
+      if (err.code === "P2002") {
+        throw new Error("Duplicate embed");
+      }
+    }
+    throw err;
+  });
 }
