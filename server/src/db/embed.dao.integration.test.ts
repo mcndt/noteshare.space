@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type { EncryptedEmbed, EncryptedNote } from "@prisma/client";
+import type { EncryptedNote } from "@prisma/client";
 import { getEmbed, createEmbed } from "./embed.dao";
 import { createNote } from "./note.dao";
 
