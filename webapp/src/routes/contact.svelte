@@ -9,12 +9,12 @@
 <div class="md:py-8 prose max-w-3xl dark:prose-invert">
 	<h1>Contact</h1>
 
-	Hi! I'm
+	Hi 🙋 I'm
 	<a href="https://mcndt.dev">mcndt</a>
 	and I build the Obsidian QuickShare plugin and operate Noteshare.space. There are several ways to get
 	in touch with me.
 
-	<h2>Bugs and feature requests</h2>
+	<h2>🐛 Bugs and feature requests</h2>
 	<p>
 		The preferred way to report bugs or request new features for the web app or the Obsidian plugin
 		is via the
@@ -23,7 +23,7 @@
 		>.
 	</p>
 
-	<h2>Inquiries about Noteshare.space</h2>
+	<h2>❓ Inquiries about Noteshare.space</h2>
 	<p>
 		For questions and inquiries about Noteshare.space (the "official" note hosting service for the
 		Obsidian QuickShare plugin), please E-mail me at <a href="mailto:contact@noteshare.space"
@@ -31,14 +31,14 @@
 		>.
 	</p>
 
-	<h2>Community</h2>
+	<h2>💬 Community</h2>
 	<p>
 		If you want a more interactive way to discuss bugs or features, or just want to chat about how
 		you use QuickShare and Noteshare.space, you can join the
 		<a href="https://discord.gg/y3HqyGeABK">Discord server</a>.
 	</p>
 
-	<h2>Get to know me!</h2>
+	<h2>👋 Get to know me!</h2>
 	<p>
 		I’m a computer science engineer with interest in a wide range of topics, including productivity,
 		PKM, artificial intelligence, product development and game design.

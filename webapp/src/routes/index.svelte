@@ -11,21 +11,24 @@
 </svelte:head>
 
 <article class="mx-auto max-w-4xl text-zinc-900 dark:text-zinc-100">
-	<div class="space-y-6 pt-20 pb-24 px-4 md:px-0">
+	<div class="space-y-6 pt-20 pb-16 md:pb-24 px-4 md:px-0">
 		<h1 id="title" class="font-extrabold text-4xl md:text-5xl text-center">
 			Securely share your <span class="text-[#705dcf]">Obsidian</span> notes with one click.
 		</h1>
 		<p id="tagline" class="prose-xl md:prose-2xl text-center text-zinc-700 dark:text-zinc-300">
 			Zero configuration. End-to-end encrypted. <br />No account needed.
 		</p>
-		<p id="install-button" class="text-center pt-2">
+		<div id="install-button" class="text-center pt-8">
 			<a href="/install">
 				<button
 					class="py-1.5 px-4 rounded-lg border-2 border-[#705dcf] text-[#705dcf] font-semibold hover:bg-[#705dcf] hover:text-white transition-colors"
 					>Install plugin</button
 				>
 			</a>
-		</p>
+			<p class="mt-2.5 italic text-sm text-zinc-500 dark:text-zinc-400">
+				Now on the Obsidian <br /> community plugin marketplace!
+			</p>
+		</div>
 	</div>
 
 	<hr class="border-zinc-200 dark:border-zinc-700 transition-colors" />
