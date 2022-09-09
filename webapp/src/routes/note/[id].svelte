@@ -25,6 +25,7 @@
 	import { browser } from '$app/env';
 	import RawRenderer from '$lib/components/RawRenderer.svelte';
 	import LogoDocument from 'svelte-icons/md/MdUndo.svelte';
+	import Dismissable from '$lib/components/Dismissable.svelte';
 
 	// Auto-loaded from [id].ts endpoint
 	export let note: EncryptedNote;
@@ -78,6 +79,8 @@
 
 {#if plaintext}
 	<div class="max-w-2xl mx-auto">
+		<Dismissable />
+
 		<p
 			class="mb-4 text-sm flex gap-2 flex-col md:gap-0 md:flex-row justify-between text-zinc-500 dark:text-zinc-400"
 		>

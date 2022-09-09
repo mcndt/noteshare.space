@@ -2,8 +2,8 @@
 	import { getCalloutColor, getCalloutIcon } from '$lib/util/callout';
 	import CalloutIcon from '$lib/components/CalloutIcon.svelte';
 
-	let title = '';
-	let type = 'note';
+	export let title = '';
+	export let type = 'note';
 	let color = '--callout-warning';
 	let icon = 'note';
 	let init = false;
@@ -12,8 +12,9 @@
 
 	$: if (content) {
 		const titleElement = content.getElementsByTagName('p')[0];
+		const preFilled = title != '';
 		const match = titleElement.innerText.split('\n')[0].match(/\[!(.+)\]([+-]?)(?:\s(.+))?/);
-		if (match) {
+		if (match && !preFilled) {
 			type = match[1]?.trim();
 			title = match[3]?.trim() ?? type[0].toUpperCase() + type.substring(1).toLowerCase();
 		}
@@ -22,11 +23,13 @@
 		icon = getCalloutIcon(type);
 
 		// Remove title from content
-		const pos = titleElement.innerHTML.indexOf('<br>');
-		if (pos >= 0) {
-			titleElement.innerHTML = titleElement.innerHTML.substring(pos + 4);
-		} else {
-			titleElement.innerHTML = '';
+		if (!preFilled) {
+			const pos = titleElement.innerHTML.indexOf('<br>');
+			if (pos >= 0) {
+				titleElement.innerHTML = titleElement.innerHTML.substring(pos + 4);
+			} else {
+				titleElement.innerHTML = '';
+			}
 		}
 		init = true;
 	}
