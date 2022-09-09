@@ -56,7 +56,6 @@
 								>
 							</span>
 						</NavBarLink>
-
 						<ThemeToggle bind:dark />
 					</svelte:fragment>
 					></NavBar
