@@ -7,7 +7,8 @@
 </script>
 
 <svelte:head>
-	<title>{import.meta.env.VITE_BRANDING} | Create share links for Obsidian in one click</title>
+	<title>{import.meta.env.VITE_BRANDING} — Securely share your Obsidian notes with one click.</title
+	>
 </svelte:head>
 
 <article class="mx-auto max-w-4xl text-zinc-900 dark:text-zinc-100">

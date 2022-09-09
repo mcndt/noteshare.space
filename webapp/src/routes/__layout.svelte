@@ -29,7 +29,42 @@
 </script>
 
 <svelte:head>
-	<title>{import.meta.env.VITE_BRANDING}</title>
+	<title>{import.meta.env.VITE_BRANDING} — Securely share your Obsidian notes with one click.</title
+	>
+	<meta
+		name="title"
+		content="Noteshare.space — Securely share your Obsidian notes with one click."
+	/>
+	<meta
+		name="description"
+		content="Securely share your Obsidian notes with one click. Zero configuration. End-to-end encrypted. No account needed. Completely open source! Download the QuickShare extension in the Obsidian community plugin marketplace."
+	/>
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://noteshare.space/" />
+	<meta
+		property="og:title"
+		content="Noteshare.space — Securely share your Obsidian notes with one click."
+	/>
+	<meta
+		property="og:description"
+		content="Securely share your Obsidian notes with one click. Zero configuration. End-to-end encrypted. No account needed. Completely open source! Download the QuickShare extension in the Obsidian community plugin marketplace."
+	/>
+	<meta property="og:image" content="https://noteshare.space/meta.png" />
+
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary_large_image" />
+	<meta property="twitter:url" content="https://noteshare.space/" />
+	<meta
+		property="twitter:title"
+		content="Noteshare.space — Securely share your Obsidian notes with one click."
+	/>
+	<meta
+		property="twitter:description"
+		content="Securely share your Obsidian notes with one click. Zero configuration. End-to-end encrypted. No account needed. Completely open source! Download the QuickShare extension in the Obsidian community plugin marketplace."
+	/>
+	<meta property="twitter:image" content="https://noteshare.space/meta.png" />
 </svelte:head>
 
 <div class=" h-full {dark !== undefined ? '' : 'hidden'} {dark ? darkTheme : ''}">
