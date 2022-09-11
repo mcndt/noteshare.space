@@ -1,5 +1,8 @@
 # Changelog
 
+## [2022-09-11]
+
+- fix: 🐛 Fix inline code showing the backtick syntax after rendering.
 ## [2022-08-23]
 
 - feat: ✨ Footnotes are rendered as they are in the Obsidian client.
