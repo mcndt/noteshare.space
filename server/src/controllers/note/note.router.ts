@@ -25,8 +25,8 @@ const getRateLimit = rateLimit({
 });
 
 // notesRoute.use(jsonParser, uploadLimit);
+notesRoute.use("/:id/embeds", embedsRoute);
 notesRoute.use(uploadLimit);
 notesRoute.use(jsonParser);
-notesRoute.post("", postRateLimit, postNoteController);
-notesRoute.get("/:id", getRateLimit, getNoteController);
-notesRoute.use("/:id/embeds/", embedsRoute);
+notesRoute.route("/").post(postRateLimit, postNoteController);
+notesRoute.route("/:id").get(getRateLimit, getNoteController);

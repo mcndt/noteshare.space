@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { getEmbed } from "../../../db/embed.dao";
 
-export async function getNoteController(
+export async function getEmbedController(
   req: Request,
   res: Response,
   next: NextFunction

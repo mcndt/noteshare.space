@@ -197,6 +197,47 @@ describe("POST /api/note", () => {
   });
 });
 
+describe("Use case: POST note with embeds, then GET embeds", () => {
+  it("returns a view_url on correct POST body with embeds", async () => {
+    const payload = {
+      ciphertext: Buffer.from("sample_ciphertext").toString("base64"),
+      hmac: Buffer.from("sample_hmac").toString("base64"),
+      user_id: "f06536e7df6857fc",
+      embeds: [
+        {
+          embed_id: "EMBED_ID",
+          ciphertext: Buffer.from("sample_ciphertext").toString("base64"),
+          hmac: Buffer.from("sample_hmac").toString("base64"),
+        },
+      ],
+    };
+
+    // make post request
+    const res = await supertest(app).post("/api/note").send(payload);
+
+    // check response and extract note id
+    expectCodeOrThrowResponse(res, 200);
+    expect(res.body).toHaveProperty("view_url");
+    const match = (res.body.view_url as string).match(/note\/(.+)$/);
+    expect(match).not.toBeNull();
+    const note_id = (match as RegExpMatchArray)[1];
+
+    // make get request for note
+    const noteRes = await supertest(app).get(`/api/note/${note_id}`);
+    expectCodeOrThrowResponse(noteRes, 200);
+    expect(noteRes.body?.ciphertext).toEqual(payload.ciphertext);
+    expect(noteRes.body?.hmac).toEqual(payload.hmac);
+
+    // make get request for embed
+    const embedRes = await supertest(app).get(
+      `/api/note/${note_id}/embeds/EMBED_ID`
+    );
+    expectCodeOrThrowResponse(embedRes, 200);
+    expect(embedRes.body?.ciphertext).toEqual(payload.embeds[0].ciphertext);
+    expect(embedRes.body?.hmac).toEqual(payload.embeds[0].hmac);
+  });
+});
+
 describe("Clean expired notes", () => {
   it("removes expired notes", async () => {
     // insert a note with expiry date in the past using prisma
@@ -238,9 +279,10 @@ function expectCodeOrThrowResponse(res: supertest.Response, expected: number) {
   try {
     expect(res.status).toBe(expected);
   } catch (e) {
-    throw new Error(`
+    (e as Error).message = `
       Unexpected status ${res.status} (expected ${expected}): 
       
-      Response body: ${res.text}`);
+      Response body: ${res.text}`;
+    throw e;
   }
 }
