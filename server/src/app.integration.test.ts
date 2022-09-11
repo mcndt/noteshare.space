@@ -4,6 +4,8 @@ import { describe, it, expect } from "vitest";
 import prisma from "./db/client";
 import { deleteExpiredNotes } from "./tasks/deleteExpiredNotes";
 import { EventType } from "./logging/EventLogger";
+import { createNote } from "./db/note.dao";
+import { EncryptedNote } from "@prisma/client";
 
 // const testNote with base64 ciphertext and hmac
 const testNote = {
@@ -272,6 +274,44 @@ describe("Clean expired notes", () => {
     expect(deleteEvents[0].size_bytes).toBe(
       testNote.ciphertext.length + testNote.hmac.length
     );
+  });
+
+  it("removes notes with embeds", async () => {
+    // insert a note with embeds and with expiry date in the past using prisma
+    const note = {
+      ...testNote,
+      expire_time: new Date(0),
+    } as EncryptedNote;
+    const embeds = [
+      {
+        embed_id: "EMBED_ID",
+        ciphertext: Buffer.from("sample_ciphertext").toString("base64"),
+        hmac: Buffer.from("sample_hmac").toString("base64"),
+      },
+    ];
+    const { id } = await createNote(note, embeds);
+
+    // make request for note and check that response is 200
+    const res = await supertest(app).get(`/api/note/${id}`);
+    expect(res.statusCode).toBe(200);
+    const embedRes = await supertest(app).get(
+      `/api/note/${id}/embeds/EMBED_ID`
+    );
+    expect(embedRes.statusCode).toBe(200);
+
+    // run cleanup
+    const nDeleted = await deleteExpiredNotes();
+    expect(nDeleted).toBeGreaterThan(0);
+
+    // if the note is added to the expire filter, it returns 410
+    const res2 = await supertest(app).get(`/api/note/${id}`);
+    expect(res2.statusCode).toBe(410);
+
+    // check that the embed is not found
+    const embedRes2 = await supertest(app).get(
+      `/api/note/${id}/embeds/EMBED_ID`
+    );
+    expect(embedRes2.statusCode).toBe(404);
   });
 });
 

@@ -28,7 +28,7 @@ model EncryptedEmbed {
   ciphertext Bytes
   hmac       String
   size_bytes Int
-  note       EncryptedNote @relation(fields: [note_id], references: [id])
+  note       EncryptedNote @relation(fields: [note_id], references: [id], onDelete: Cascade)
 
   @@unique([note_id, embed_id], name: "noteId_embedId")
 }
