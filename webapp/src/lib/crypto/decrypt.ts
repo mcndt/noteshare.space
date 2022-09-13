@@ -36,6 +36,15 @@ export async function decrypt_v2(cryptData: {
 	hmac: string;
 	key: string;
 }): Promise<string> {
+	const md = await decryptBuffer_v2(cryptData);
+	return new TextDecoder().decode(md);
+}
+
+export async function decryptBuffer_v2(cryptData: {
+	ciphertext: string;
+	hmac: string;
+	key: string;
+}): Promise<ArrayBuffer> {
 	const secret = base64ToArrayBuffer(cryptData.key);
 	const ciphertext_buf = base64ToArrayBuffer(cryptData.ciphertext);
 	const hmac_buf = base64ToArrayBuffer(cryptData.hmac);
@@ -51,12 +60,12 @@ export async function decrypt_v2(cryptData: {
 		throw Error('Failed HMAC check');
 	}
 
-	const md = await window.crypto.subtle.decrypt(
+	const data = await window.crypto.subtle.decrypt(
 		{ name: 'AES-CBC', iv: new Uint8Array(16) },
 		await _getAesKey(secret),
 		ciphertext_buf
 	);
-	return new TextDecoder().decode(md);
+	return data;
 }
 
 function _getAesKey(secret: ArrayBuffer): Promise<CryptoKey> {
