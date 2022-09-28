@@ -23,5 +23,7 @@
 		>🐛 Report bug</a
 	>
 	<span>-</span>
+	<a class="underline" href="/funding">Expenses & funding</a>
+	<span>-</span>
 	<a class="underline" href="https://www.buymeacoffee.com/mcndt">☕ Buy me a coffee</a>
 </footer>
