@@ -12,6 +12,9 @@ The preferred way to report bugs or request new features for the web app or the 
 
 If you want a more interactive way to discuss bugs or features, you can join the [Discord server](https://discord.gg/y3HqyGeABK).
 
+## Funding
+
+By popular request I have written a post about how the public instance of Noteshare is funded: https://noteshare.space/funding
 
 ## Local development
 
