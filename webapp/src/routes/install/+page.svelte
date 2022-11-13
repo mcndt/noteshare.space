@@ -1,7 +1,3 @@
-<script context="module">
-	export const prerender = true;
-</script>
-
 <svelte:head>
 	<title>Get the plugin | {import.meta.env.VITE_BRANDING}</title>
 	<script src="https://tarptaeya.github.io/repo-card/repo-card.js"></script>

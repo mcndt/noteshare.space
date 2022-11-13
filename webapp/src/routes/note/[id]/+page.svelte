@@ -1,34 +1,19 @@
-<script context="module" , lang="ts">
-	import type { Load } from '@sveltejs/kit';
-
-	export const load: Load = async ({ props }) => {
-		const note: EncryptedNote = props.note;
-		const maxage = Math.floor((note.expire_time.valueOf() - note.insert_time.valueOf()) / 1000);
-		return {
-			status: 200,
-			cache: {
-				maxage: maxage,
-				private: false
-			},
-			props: { note }
-		};
-	};
-</script>
-
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { decrypt } from '$lib/crypto/decrypt';
 	import MarkdownRenderer from '$lib/components/MarkdownRenderer.svelte';
 	import LogoMarkdown from 'svelte-icons/io/IoLogoMarkdown.svelte';
 	import IconEncrypted from 'svelte-icons/md/MdLockOutline.svelte';
-	import type { EncryptedNote } from '$lib/model/EncryptedNote';
 	import { browser } from '$app/env';
 	import RawRenderer from '$lib/components/RawRenderer.svelte';
 	import LogoDocument from 'svelte-icons/md/MdUndo.svelte';
 	import Dismissable from '$lib/components/Dismissable.svelte';
 
 	// Auto-loaded from [id].ts endpoint
-	export let note: EncryptedNote;
+
+	/** @type {import('./$types').PageData} */
+	export let data;
+	let { note } = data;
 	let plaintext: string;
 	let timeString: string;
 	let decryptFailed = false;

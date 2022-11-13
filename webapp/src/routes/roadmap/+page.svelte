@@ -1,7 +1,3 @@
-<script context="module">
-	export const prerender = true;
-</script>
-
 <svelte:head>
 	<title>Roadmap | {import.meta.env.VITE_BRANDING}</title>
 </svelte:head>
