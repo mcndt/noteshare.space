@@ -11,7 +11,8 @@
     "test:coverage": "dotenv -e .env.test -- vitest run --no-threads --coverage",
     "test:db:reset": "dotenv -e .env.test -- npx prisma migrate reset -f",
     "build": "npx tsc",
-    "dev": "npx nodemon src/server.ts | npx pino-colada"
+    "dev": "npx nodemon src/server.ts | npx pino-colada",
+    "migrate": "npx prisma migrate dev"
   },
   "author": "Maxime Cannoodt (mcndt)",
   "license": "MIT",
