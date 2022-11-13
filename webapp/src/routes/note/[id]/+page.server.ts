@@ -3,8 +3,8 @@ import type { PageServerLoad } from './$types';
 
 import { error } from '@sveltejs/kit';
 
-export const get: PageServerLoad = async ({ request, clientAddress, params, setHeaders }) => {
-	const ip = (request.headers.get('x-forwarded-for') || clientAddress) as string;
+export const load: PageServerLoad = async ({ request, params, setHeaders, getClientAddress }) => {
+	const ip = (request.headers.get('x-forwarded-for') || getClientAddress()) as string;
 	const url = `${import.meta.env.VITE_SERVER_INTERNAL}/api/note/${params.id}`;
 	const response = await fetch(url, {
 		headers: {
@@ -20,7 +20,7 @@ export const get: PageServerLoad = async ({ request, clientAddress, params, setH
 			const maxage = Math.floor((note.expire_time.valueOf() - note.insert_time.valueOf()) / 1000);
 
 			setHeaders({
-				maxage: maxage,
+				maxage: `${maxage}`,
 				'Cache-Control': `max-age=${maxage}, public`
 			});
 			return { note };

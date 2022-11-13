@@ -4,7 +4,7 @@
 	import MarkdownRenderer from '$lib/components/MarkdownRenderer.svelte';
 	import LogoMarkdown from 'svelte-icons/io/IoLogoMarkdown.svelte';
 	import IconEncrypted from 'svelte-icons/md/MdLockOutline.svelte';
-	import { browser } from '$app/env';
+	import { browser } from '$app/environment';
 	import RawRenderer from '$lib/components/RawRenderer.svelte';
 	import LogoDocument from 'svelte-icons/md/MdUndo.svelte';
 	import Dismissable from '$lib/components/Dismissable.svelte';
