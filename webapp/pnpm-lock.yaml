@@ -6,7 +6,7 @@ specifiers:
   '@sveltejs/kit': ^1.0.0-next.544
   '@tailwindcss/typography': ^0.5.2
   '@testing-library/jest-dom': ^5.16.4
-  '@testing-library/svelte': ^3.1.3
+  '@testing-library/svelte': ^3.2.2
   '@types/crypto-js': ^4.1.1
   '@types/marked': ^4.0.3
   '@typescript-eslint/eslint-plugin': ^5.27.0
@@ -35,7 +35,6 @@ specifiers:
   vite: ^3.2.3
   vite-plugin-markdown: ^2.1.0
   vitest: ^0.17.0
-  vitest-svelte-kit: ^0.0.6
 
 dependencies:
   '@sveltejs/adapter-node': 1.0.0-next.100
@@ -74,7 +73,6 @@ devDependencies:
   vite: 3.2.3
   vite-plugin-markdown: 2.1.0_vite@3.2.3
   vitest: 0.17.1_c8@7.12.0+happy-dom@6.0.4
-  vitest-svelte-kit: 0.0.6
 
 packages:
 
@@ -3659,11 +3657,6 @@ packages:
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.2
-    dev: true
-
-  /vitest-svelte-kit/0.0.6:
-    resolution: {integrity: sha512-bQ1GcCAk600YV1xOiJBhltGE/HO/j6FozNY2BFq2GP1mHh3pj0KrGZlyx0kVlXx+BSKDXQHuYZtwlHwNlvv0fQ==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dev: true
 
   /vitest/0.17.1_c8@7.12.0+happy-dom@6.0.4:

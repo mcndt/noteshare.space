@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-
 	import { onMount } from 'svelte';
 
 	import hljs from 'highlight.js/lib/common';
@@ -12,12 +10,14 @@
 	let highlighted: string;
 
 	onMount(() => {
-		if (browser) {
+		try {
 			if (hljs.getLanguage(lang) !== undefined) {
 				highlighted = hljs.highlight(text, { language: lang }).value;
 			} else {
 				highlighted = text;
 			}
+		} catch {
+			highlighted = text;
 		}
 	});
 </script>
