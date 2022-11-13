@@ -1,14 +1,20 @@
 # Changelog
 
+## [2022-11-13] (["HACK WEEK"](https://mcndt.dev/posts/hack-week-november-2022/))
+
+- security: 🔐 Can now decrypt GCM-encrypted notes from Quickshare plugin versions 1.0.2 and higher.
+
 ## [2022-09-11]
 
 - fix: 🐛 Fix inline code showing the backtick syntax after rendering.
+
 ## [2022-08-23]
 
 - feat: ✨ Footnotes are rendered as they are in the Obsidian client.
+
 ## [2022-08-16]
 
-- fix: 🐛 Fix highlights not rendering correctly when mixed with other  formatting. ([issue #19](https://github.com/mcndt/noteshare.space/issues/19))
+- fix: 🐛 Fix highlights not rendering correctly when mixed with other formatting. ([issue #19](https://github.com/mcndt/noteshare.space/issues/19))
 - fix: 🐛 Fix some characters escaping the rendering for #tags. ([issue #10](https://github.com/mcndt/noteshare.space/issues/10))
 
 ## [2022-08-11]
