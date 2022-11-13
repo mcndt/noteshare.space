@@ -29,6 +29,7 @@ describe("deleteExpiredNotes", () => {
         id: "test",
         ciphertext: "test",
         hmac: "test",
+        iv: null,
         insert_time: new Date(),
         expire_time: new Date(),
         crypto_version: "v1",
