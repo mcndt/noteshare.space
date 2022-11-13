@@ -2,16 +2,31 @@
 
 import { AES, enc, HmacSHA256 } from 'crypto-js';
 
-export async function decrypt(
-	cryptData: { ciphertext: string; hmac: string; key: string },
-	version: string
-): Promise<string> {
+type CryptData = {
+	ciphertext: string;
+	key: string;
+	iv?: string;
+	hmac?: string;
+};
+
+type CryptData_v1 = CryptData & {
+	hmac: string;
+};
+
+type CryptData_v3 = CryptData & {
+	iv: string;
+};
+
+export async function decrypt(cryptData: CryptData, version: string): Promise<string> {
 	console.debug(`decrypting with crypto suite ${version}`);
 	if (version === 'v1') {
-		return decrypt_v1(cryptData);
+		return decrypt_v1(cryptData as CryptData_v1);
 	}
 	if (version === 'v2') {
-		return decrypt_v2(cryptData);
+		return decrypt_v2(cryptData as CryptData_v1);
+	}
+	if (version === 'v3') {
+		return decrypt_v3(cryptData as CryptData_v3);
 	}
 	throw new Error(`Unsupported crypto version: ${version}`);
 }
@@ -53,15 +68,37 @@ export async function decrypt_v2(cryptData: {
 
 	const md = await window.crypto.subtle.decrypt(
 		{ name: 'AES-CBC', iv: new Uint8Array(16) },
-		await _getAesKey(secret),
+		await _getAesCbcKey(secret),
 		ciphertext_buf
 	);
 	return new TextDecoder().decode(md);
 }
 
-function _getAesKey(secret: ArrayBuffer): Promise<CryptoKey> {
+export async function decrypt_v3(cryptData: {
+	ciphertext: string;
+	iv: string;
+	key: string;
+}): Promise<string> {
+	const secret = base64ToArrayBuffer(cryptData.key);
+	const ciphertext_buf = base64ToArrayBuffer(cryptData.ciphertext);
+	const iv_buf = base64ToArrayBuffer(cryptData.iv);
+
+	const md = await window.crypto.subtle.decrypt(
+		{ name: 'AES-GCM', iv: iv_buf },
+		await _getAesGcmKey(secret),
+		ciphertext_buf
+	);
+	return new TextDecoder().decode(md);
+}
+
+function _getAesCbcKey(secret: ArrayBuffer): Promise<CryptoKey> {
 	return window.crypto.subtle.importKey('raw', secret, { name: 'AES-CBC', length: 256 }, false, [
-		'encrypt',
+		'decrypt'
+	]);
+}
+
+function _getAesGcmKey(secret: ArrayBuffer): Promise<CryptoKey> {
+	return window.crypto.subtle.importKey('raw', secret, { name: 'AES-GCM', length: 256 }, false, [
 		'decrypt'
 	]);
 }

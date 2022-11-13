@@ -2,7 +2,7 @@ import { EncryptedNote } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { crc16 as crc } from "crc";
 import { createNote } from "../../db/note.dao";
-import { addDays, getConnectingIp } from "../../util";
+import { addDays, getConnectingIp, getNoteSize } from "../../util";
 import EventLogger, { WriteEvent } from "../../logging/EventLogger";
 import {
   validateOrReject,
@@ -23,8 +23,12 @@ export class NotePostRequest {
   ciphertext: string | undefined;
 
   @IsBase64()
-  @IsNotEmpty()
-  hmac: string | undefined;
+  @ValidateIf((o) => !o.iv)
+  hmac?: string | undefined;
+
+  @IsBase64()
+  @ValidateIf((o) => !o.hmac)
+  iv?: string | undefined;
 
   @ValidateIf((o) => o.user_id != null)
   @IsHexadecimal()
@@ -77,6 +81,7 @@ export async function postNoteController(
   const note = {
     ciphertext: notePostRequest.ciphertext as string,
     hmac: notePostRequest.hmac as string,
+    iv: notePostRequest.iv as string,
     expire_time: addDays(new Date(), EXPIRE_WINDOW_DAYS),
     crypto_version: notePostRequest.crypto_version,
   } as EncryptedNote;
@@ -86,7 +91,7 @@ export async function postNoteController(
     .then(async (savedNote) => {
       event.success = true;
       event.note_id = savedNote.id;
-      event.size_bytes = savedNote.ciphertext.length + savedNote.hmac.length;
+      event.size_bytes = getNoteSize(note);
       event.expire_window_days = EXPIRE_WINDOW_DAYS;
       await EventLogger.writeEvent(event);
       res.json({

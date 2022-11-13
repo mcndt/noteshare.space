@@ -1,5 +1,6 @@
 import { event } from "@prisma/client";
 import prisma from "../db/client";
+import logger from "./logger";
 
 export enum EventType {
   WRITE = "WRITE",
@@ -33,19 +34,28 @@ interface PurgeEvent extends Event {
 }
 
 export default class EventLogger {
+  private static printError(event: Event) {
+    if (event.error) {
+      logger.error(event.error);
+    }
+  }
+
   public static writeEvent(event: WriteEvent): Promise<event> {
+    this.printError(event);
     return prisma.event.create({
       data: { type: EventType.WRITE, ...event },
     });
   }
 
   public static readEvent(event: ReadEvent): Promise<event> {
+    this.printError(event);
     return prisma.event.create({
       data: { type: EventType.READ, ...event },
     });
   }
 
   public static purgeEvent(event: PurgeEvent): Promise<event> {
+    this.printError(event);
     return prisma.event.create({
       data: { type: EventType.PURGE, ...event },
     });

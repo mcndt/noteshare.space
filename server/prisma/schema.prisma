@@ -15,7 +15,8 @@ model EncryptedNote {
   insert_time    DateTime @default(now())
   expire_time    DateTime @default(now())
   ciphertext     String
-  hmac           String
+  hmac           String?
+  iv             String?
   crypto_version String   @default("v1")
 }
 

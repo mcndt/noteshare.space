@@ -2,6 +2,7 @@ import { deleteNotes, getExpiredNotes } from "../db/note.dao";
 import { getExpiredNoteFilter } from "../lib/expiredNoteFilter";
 import EventLogger from "../logging/EventLogger";
 import logger from "../logging/logger";
+import { getNoteSize } from "../util";
 
 export async function deleteExpiredNotes(): Promise<number> {
   logger.info("[Cleanup] Cleaning up expired notes...");
@@ -11,14 +12,14 @@ export async function deleteExpiredNotes(): Promise<number> {
     .then(async (deleteCount) => {
       const logs = toDelete.map(async (note) => {
         logger.info(
-          `[Cleanup] Deleted note ${note.id} with size ${
-            note.ciphertext.length + note.hmac.length
-          } bytes`
+          `[Cleanup] Deleted note ${note.id} with size ${getNoteSize(
+            note
+          )} bytes`
         );
         return EventLogger.purgeEvent({
           success: true,
           note_id: note.id,
-          size_bytes: note.ciphertext.length + note.hmac.length,
+          size_bytes: getNoteSize(note),
         });
       });
       await Promise.all(logs);

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { getExpiredNoteFilter } from "../../lib/expiredNoteFilter";
 import EventLogger from "../../logging/EventLogger";
-import { getConnectingIp } from "../../util";
+import { getConnectingIp, getNoteSize } from "../../util";
 import { getNote } from "../../db/note.dao";
 export async function getNoteController(
   req: Request,
@@ -16,7 +16,7 @@ export async function getNoteController(
           success: true,
           host: ip,
           note_id: note.id,
-          size_bytes: note.ciphertext.length + note.hmac.length,
+          size_bytes: getNoteSize(note),
         });
         res.send(note);
       } else {

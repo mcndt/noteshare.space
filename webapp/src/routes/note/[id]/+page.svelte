@@ -8,19 +8,18 @@
 	import RawRenderer from '$lib/components/RawRenderer.svelte';
 	import LogoDocument from 'svelte-icons/md/MdUndo.svelte';
 	import Dismissable from '$lib/components/Dismissable.svelte';
+	import type { PageData } from './$types';
 
-	// Auto-loaded from [id].ts endpoint
-
-	/** @type {import('./$types').PageData} */
-	export let data;
+	export let data: PageData;
 	let { note } = data;
+
 	let plaintext: string;
 	let timeString: string;
 	let decryptFailed = false;
 	let showRaw = false;
 
 	onMount(() => {
-		if (browser) {
+		if (browser && note) {
 			const key = location.hash.slice(1);
 			decrypt({ ...note, key }, note.crypto_version)
 				.then((value) => (plaintext = value))
@@ -28,7 +27,7 @@
 		}
 	});
 
-	$: if (note.insert_time) {
+	$: if (note?.insert_time) {
 		const diff_ms = new Date().valueOf() - new Date(note.insert_time).valueOf();
 		timeString = msToString(diff_ms);
 	}
