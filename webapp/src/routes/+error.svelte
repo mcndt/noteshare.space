@@ -12,6 +12,15 @@
 			Notes are stored for a limited amount of time. The note at this link was either set to expire,
 			or deleted due to inactivity. Sorry!
 		</p>
+	{:else}
+		<h1>Something went wrong 🤔</h1>
+		<p class="prose-xl">
+			{#if import.meta.env.DEV}
+				<pre class="prose-xl">{JSON.stringify($page.error, null, 2)}</pre>
+			{:else}
+				<p class="prose-xl">An error occurred while loading this page. Please try again later.</p>
+			{/if}
+		</p>
 	{/if}
 
 	<div class="not-prose w-full flex justify-center mt-16">

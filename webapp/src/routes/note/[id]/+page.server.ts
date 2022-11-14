@@ -25,9 +25,9 @@ export const load: PageServerLoad = async ({ request, params, setHeaders, getCli
 			});
 			return { note };
 		} catch {
-			error(500, response.statusText);
+			throw error(500, response.statusText);
 		}
 	} else {
-		error(response.status, response.statusText);
+		throw error(response.status, response.statusText);
 	}
 };

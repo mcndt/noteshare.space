@@ -17,20 +17,7 @@
 	let timeString: string;
 	let decryptFailed = false;
 	let showRaw = false;
-
-	onMount(() => {
-		if (browser && note) {
-			const key = location.hash.slice(1);
-			decrypt({ ...note, key }, note.crypto_version)
-				.then((value) => (plaintext = value))
-				.catch(() => (decryptFailed = true));
-		}
-	});
-
-	$: if (note?.insert_time) {
-		const diff_ms = new Date().valueOf() - new Date(note.insert_time).valueOf();
-		timeString = msToString(diff_ms);
-	}
+	let fileTitle: string | undefined;
 
 	function toggleRaw() {
 		showRaw = !showRaw;
@@ -51,6 +38,33 @@
 		}
 		const months = days / 30.42;
 		return `${Math.floor(months)} month${months >= 2 ? 's' : ''}`;
+	}
+
+	function parsePayload(payload: string): { body: string; title?: string } {
+		try {
+			const parsed = JSON.parse(payload);
+			return { body: parsed?.body, title: parsed?.title };
+		} catch (e) {
+			return { body: payload, title: undefined };
+		}
+	}
+
+	onMount(() => {
+		if (browser && note) {
+			const key = location.hash.slice(1);
+			decrypt({ ...note, key }, note.crypto_version)
+				.then((value) => {
+					const { body, title } = parsePayload(value);
+					plaintext = body;
+					fileTitle = title;
+				})
+				.catch(() => (decryptFailed = true));
+		}
+	});
+
+	$: if (note?.insert_time) {
+		const diff_ms = new Date().valueOf() - new Date(note.insert_time).valueOf();
+		timeString = msToString(diff_ms);
 	}
 </script>
 
@@ -88,7 +102,7 @@
 		{#if showRaw}
 			<RawRenderer>{plaintext}</RawRenderer>
 		{:else}
-			<MarkdownRenderer {plaintext} />
+			<MarkdownRenderer {plaintext} {fileTitle} />
 		{/if}
 	</div>
 {/if}

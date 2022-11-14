@@ -19,6 +19,8 @@
 	import Footnote from '$lib/marked/renderers/Footnote.svelte';
 
 	export let plaintext: string;
+	export let fileTitle: string | undefined;
+
 	let ref: HTMLDivElement;
 	let footnotes: HTMLDivElement[];
 	let footnoteContainer: HTMLDivElement;
@@ -29,8 +31,12 @@
 	const options = { ...marked.defaults, breaks: true };
 
 	function onParsed() {
-		setTitle();
+		!fileTitle && setTitle();
 		parseFootnotes();
+	}
+
+	$: if (fileTitle) {
+		document.title = fileTitle.trim();
 	}
 
 	/**
@@ -68,6 +74,9 @@
 prose-strong:font-bold prose-a:font-normal prose-blockquote:font-normal prose-blockquote:not-italic
 prose-blockquote:first:before:content-[''] prose-hr:transition-colors prose-code:before:content-[''] prose-code:after:content-['']"
 >
+	{#if fileTitle}
+		<h1>{fileTitle}</h1>
+	{/if}
 	<SvelteMarkdown
 		on:parsed={onParsed}
 		renderers={{
