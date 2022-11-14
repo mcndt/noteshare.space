@@ -1,5 +1,9 @@
 # Changelog
 
+## [2022-11-14] (["HACK WEEK"](https://mcndt.dev/posts/hack-week-november-2022/))
+
+- feat: ✨ Support for showing file title as note title in web viewer.
+
 ## [2022-11-13] (["HACK WEEK"](https://mcndt.dev/posts/hack-week-november-2022/))
 
 - security: 🔐 Can now decrypt GCM-encrypted notes from Quickshare plugin versions 1.0.2 and higher.
