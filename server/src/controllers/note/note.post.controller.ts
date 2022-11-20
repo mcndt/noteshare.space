@@ -13,6 +13,7 @@ import {
   ValidationError,
   Matches,
 } from "class-validator";
+import { generateToken } from "../../crypto/GenerateToken";
 
 /**
  * Request body for creating a note
@@ -78,12 +79,15 @@ export async function postNoteController(
 
   // Create note object
   const EXPIRE_WINDOW_DAYS = 30;
+  const secret_token = generateToken();
+
   const note = {
     ciphertext: notePostRequest.ciphertext as string,
     hmac: notePostRequest.hmac as string,
     iv: notePostRequest.iv as string,
     expire_time: addDays(new Date(), EXPIRE_WINDOW_DAYS),
     crypto_version: notePostRequest.crypto_version,
+    secret_token: secret_token,
   } as EncryptedNote;
 
   // Store note object
@@ -97,6 +101,7 @@ export async function postNoteController(
       res.json({
         view_url: `${process.env.FRONTEND_URL}/note/${savedNote.id}`,
         expire_time: savedNote.expire_time,
+        secret_token: savedNote.secret_token,
       });
     })
     .catch(async (err) => {

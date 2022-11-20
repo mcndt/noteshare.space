@@ -18,6 +18,7 @@ model EncryptedNote {
   hmac           String?
   iv             String?
   crypto_version String   @default("v1")
+  secret_token   String?
 }
 
 model event {
