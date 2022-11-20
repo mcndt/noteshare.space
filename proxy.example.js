@@ -3,6 +3,8 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 
+const PORT = 5000;
+
 app.use(
   "/api/",
   createProxyMiddleware({
@@ -19,5 +21,5 @@ app.use(
   })
 );
 
-app.listen(5000);
-console.log("Reverse proxy listening at http://localhost:5000");
+app.listen(PORT);
+console.log(`Reverse proxy listening at http://localhost:${5000}`);
