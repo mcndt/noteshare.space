@@ -36,7 +36,7 @@ export async function deleteNoteController(
     console.log("invalid user id");
     res.status(400).send("Invalid user id (checksum failed)");
     event.error = "Invalid user id (checksum failed)";
-    EventLogger.writeEvent(event);
+    EventLogger.deleteEvent(event);
     return;
   }
 
@@ -60,7 +60,7 @@ export async function deleteNoteController(
   // Delete note
   try {
     await deleteNote(note.id);
-    res.status(200);
+    res.status(200).send();
     event.success = true;
     event.note_id = note.id;
     event.size_bytes = getNoteSize(note);
