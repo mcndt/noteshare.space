@@ -71,6 +71,7 @@ export async function postNoteController(
         view_url: `${process.env.FRONTEND_URL}/note/${savedNote.id}`,
         expire_time: savedNote.expire_time,
         secret_token: savedNote.secret_token,
+        note_id: savedNote.id,
       });
     })
     .catch(async (err) => {
