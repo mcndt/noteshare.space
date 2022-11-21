@@ -1,47 +1,16 @@
 import { EncryptedNote } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
-import { crc16 as crc } from "crc";
 import { createNote } from "../../db/note.dao";
 import { addDays, getConnectingIp, getNoteSize } from "../../util";
 import EventLogger, { WriteEvent } from "../../logging/EventLogger";
-import {
-  validateOrReject,
-  IsBase64,
-  IsHexadecimal,
-  IsNotEmpty,
-  ValidateIf,
-  ValidationError,
-  Matches,
-} from "class-validator";
+import { validateOrReject, ValidationError } from "class-validator";
 import { generateToken } from "../../crypto/GenerateToken";
+import { NotePostRequest } from "../../validation/Request";
+import checkId from "../../lib/checkUserId";
 
 /**
  * Request body for creating a note
  */
-export class NotePostRequest {
-  @IsBase64()
-  @IsNotEmpty()
-  ciphertext: string | undefined;
-
-  @IsBase64()
-  @ValidateIf((o) => !o.iv)
-  hmac?: string | undefined;
-
-  @IsBase64()
-  @ValidateIf((o) => !o.hmac)
-  iv?: string | undefined;
-
-  @ValidateIf((o) => o.user_id != null)
-  @IsHexadecimal()
-  user_id: string | undefined;
-
-  @ValidateIf((o) => o.plugin_version != null)
-  @Matches("^[0-9]+\\.[0-9]+\\.[0-9]+$")
-  plugin_version: string | undefined;
-
-  @Matches("^v[0-9]+$")
-  crypto_version: string = "v1";
-}
 
 export async function postNoteController(
   req: Request,
@@ -109,24 +78,4 @@ export async function postNoteController(
       await EventLogger.writeEvent(event);
       next(err);
     });
-}
-
-/**
- * @param id {string} a 16 character base16 string with 12 random characters and 4 CRC characters
- * @returns {boolean} true if the id is valid, false otherwise
- */
-function checkId(id: string): boolean {
-  // check length
-  if (id.length !== 16) {
-    return false;
-  }
-  // extract the random number and the checksum
-  const random = id.slice(0, 12);
-  const checksum = id.slice(12, 16);
-
-  // compute the CRC of the random number
-  const computedChecksum = crc(random).toString(16).padStart(4, "0");
-
-  // compare the computed checksum with the one in the id
-  return computedChecksum === checksum;
 }

@@ -3,7 +3,8 @@ import supertest from "supertest";
 import { vi, describe, it, beforeEach, afterEach, expect } from "vitest";
 import * as noteDao from "../../db/note.dao";
 import EventLogger from "../../logging/EventLogger";
-import { NotePostRequest, postNoteController } from "./note.post.controller";
+import { NotePostRequest } from "../../validation/Request";
+import { postNoteController } from "./note.post.controller";
 
 vi.mock("../../db/note.dao");
 vi.mock("../../logging/EventLogger");

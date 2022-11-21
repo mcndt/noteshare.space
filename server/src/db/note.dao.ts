@@ -23,6 +23,12 @@ export async function getExpiredNotes(): Promise<EncryptedNote[]> {
   });
 }
 
+export async function deleteNote(noteId: string): Promise<EncryptedNote> {
+  return prisma.encryptedNote.delete({
+    where: { id: noteId },
+  });
+}
+
 export async function deleteNotes(noteIds: string[]): Promise<number> {
   return prisma.encryptedNote
     .deleteMany({

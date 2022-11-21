@@ -5,10 +5,12 @@ import logger from "./logger";
 export enum EventType {
   WRITE = "WRITE",
   READ = "READ",
+  DELETE = "DELETE",
+  UPDATE = "UPDATE",
   PURGE = "PURGE",
 }
 
-interface Event {
+export interface Event {
   success: boolean;
   error?: string;
 }
@@ -25,6 +27,10 @@ interface ClientEvent extends Event {
 export interface WriteEvent extends ClientEvent {
   expire_window_days?: number;
 }
+
+interface DeleteEvent extends ClientEvent {}
+
+interface UpdateEvent extends ClientEvent {}
 
 interface ReadEvent extends ClientEvent {}
 
@@ -51,6 +57,20 @@ export default class EventLogger {
     this.printError(event);
     return prisma.event.create({
       data: { type: EventType.READ, ...event },
+    });
+  }
+
+  public static deleteEvent(event: DeleteEvent): Promise<event> {
+    this.printError(event);
+    return prisma.event.create({
+      data: { type: EventType.DELETE, ...event },
+    });
+  }
+
+  public static updateEvent(event: UpdateEvent): Promise<event> {
+    this.printError(event);
+    return prisma.event.create({
+      data: { type: EventType.UPDATE, ...event },
     });
   }
 

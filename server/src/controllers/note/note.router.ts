@@ -1,5 +1,6 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
+import { deleteNoteController } from "./note.delete.controller";
 import { getNoteController } from "./note.get.controller";
 import { postNoteController } from "./note.post.controller";
 
@@ -25,3 +26,4 @@ const getRateLimit = rateLimit({
 notesRoute.use(jsonParser);
 notesRoute.post("", postRateLimit, postNoteController);
 notesRoute.get("/:id", getRateLimit, getNoteController);
+notesRoute.delete("/:id", getRateLimit, deleteNoteController);
