@@ -1,5 +1,5 @@
 import { deleteNotes, getExpiredNotes } from "../db/note.dao";
-import { getExpiredNoteFilter } from "../lib/expiredNoteFilter";
+import { getNoteFilter } from "../lib/expiredNoteFilter";
 import EventLogger from "../logging/EventLogger";
 import logger from "../logging/logger";
 import { getNoteSize } from "../util";
@@ -23,7 +23,7 @@ export async function deleteExpiredNotes(): Promise<number> {
         });
       });
       await Promise.all(logs);
-      const filter = await getExpiredNoteFilter();
+      const filter = await getNoteFilter("expiredNotes");
       await filter.addNoteIds(toDelete.map((n) => n.id));
       logger.info(`[Cleanup] Deleted ${deleteCount} expired notes.`);
       return deleteCount;

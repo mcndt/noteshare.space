@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { ExpiredNoteFilter } from "./expiredNoteFilter";
+import { NoteIdFilter } from "./expiredNoteFilter";
 import { ScalableBloomFilter } from "bloom-filters";
 
 import * as dao from "../db/bloomFilter.dao";
@@ -16,12 +16,12 @@ describe("Deserialization from database", () => {
     mockedDao.getFilter.mockRejectedValue(new Error("No BloomFilter found"));
 
     // test instatiation
-    const testFilter = await ExpiredNoteFilter.deserializeFromDb();
+    const testFilter = await NoteIdFilter.deserializeFromDb();
     expect(mockedDao.getFilter).toHaveBeenCalledWith(
       "expiredNotes",
       ScalableBloomFilter
     );
-    expect(testFilter).toBeInstanceOf(ExpiredNoteFilter);
+    expect(testFilter).toBeInstanceOf(NoteIdFilter);
 
     // expect the _filter property to be a fresh ScalableBloomFilter (capacity 8)
     expect(testFilter._filter).toBeInstanceOf(ScalableBloomFilter);
@@ -37,7 +37,7 @@ describe("Deserialization from database", () => {
     mockedDao.getFilter.mockResolvedValue(bloomFilter);
 
     // test instatiation
-    const testFilter = await ExpiredNoteFilter.deserializeFromDb();
+    const testFilter = await NoteIdFilter.deserializeFromDb();
     expect(mockedDao.getFilter).toHaveBeenCalledWith(
       "expiredNotes",
       ScalableBloomFilter
@@ -51,7 +51,7 @@ describe("Deserialization from database", () => {
 });
 
 describe("Filter operations and serialization", () => {
-  let testFilter: ExpiredNoteFilter;
+  let testFilter: NoteIdFilter;
 
   beforeEach(async () => {
     const mockedDao = vi.mocked(dao);
@@ -63,7 +63,7 @@ describe("Filter operations and serialization", () => {
   });
 
   it("should add multiple noteIds to the filter", async () => {
-    testFilter = await ExpiredNoteFilter.deserializeFromDb();
+    testFilter = await NoteIdFilter.deserializeFromDb();
     testFilter.addNoteIds(["test", "test2"]);
     expect(testFilter.hasNoteId("test")).toBe(true);
     expect(testFilter.hasNoteId("test2")).toBe(true);
@@ -77,7 +77,7 @@ describe("Filter operations and serialization", () => {
   });
 
   it("Should have an error rate <1% for 1000 elements", async () => {
-    testFilter = await ExpiredNoteFilter.deserializeFromDb();
+    testFilter = await NoteIdFilter.deserializeFromDb();
     const elements = Array.from({ length: 1000 }, (_, i) => i.toString());
     testFilter.addNoteIds(elements);
 

@@ -38,7 +38,7 @@ describe("deleteExpiredNotes", () => {
     mockedDao.deleteNotes.mockResolvedValue(1);
 
     // mock ExpiredNoteFilter
-    const mockedFilter = vi.mocked(await filter.getExpiredNoteFilter());
+    const mockedFilter = vi.mocked(await filter.getNoteFilter());
     mockedFilter.addNoteIds.mockResolvedValue();
 
     // test task call

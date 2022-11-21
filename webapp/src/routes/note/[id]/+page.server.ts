@@ -28,6 +28,8 @@ export const load: PageServerLoad = async ({ request, params, setHeaders, getCli
 			throw error(500, response.statusText);
 		}
 	} else {
-		throw error(response.status, response.statusText);
+		// get the response body (the reason why the request failed)
+		const body = await response.text();
+		throw error(response.status, body);
 	}
 };

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { getExpiredNoteFilter } from "../../lib/expiredNoteFilter";
+import { getNoteFilter } from "../../lib/expiredNoteFilter";
 import EventLogger from "../../logging/EventLogger";
 import { getConnectingIp, getNoteSize } from "../../util";
 import { getNote } from "../../db/note.dao";
@@ -21,8 +21,18 @@ export async function getNoteController(
         res.send(note);
       } else {
         // check the expired filter to see if the note was expired
-        const expiredFilter = await getExpiredNoteFilter();
-        if (expiredFilter.hasNoteId(req.params.id)) {
+        const deletedFilter = await getNoteFilter("deletedNotes");
+        const expiredFilter = await getNoteFilter("expiredNotes");
+
+        if (deletedFilter.hasNoteId(req.params.id)) {
+          await EventLogger.readEvent({
+            success: false,
+            host: ip,
+            note_id: req.params.id,
+            error: "Note deleted",
+          });
+          res.status(410).send("Note deleted");
+        } else if (expiredFilter.hasNoteId(req.params.id)) {
           await EventLogger.readEvent({
             success: false,
             host: ip,
@@ -37,7 +47,7 @@ export async function getNoteController(
             note_id: req.params.id,
             error: "Note not found",
           });
-          res.status(404).send();
+          res.status(404).send("Note not found");
         }
       }
     })

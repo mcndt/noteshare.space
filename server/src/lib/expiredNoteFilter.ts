@@ -1,16 +1,23 @@
 import { ScalableBloomFilter } from "bloom-filters";
 import { getFilter, upsertFilter } from "../db/bloomFilter.dao";
 
-export class ExpiredNoteFilter {
-  _filter: ScalableBloomFilter;
-  static FILTER_NAME = "expiredNotes";
+export const EXPIRED_NOTES_FILTER_NAME = "expiredNotes" as const;
+export const DELETED_NOTES_FILTER_NAME = "deletedNotes" as const;
 
-  private constructor(filter: ScalableBloomFilter) {
+type FilterName =
+  | typeof EXPIRED_NOTES_FILTER_NAME
+  | typeof DELETED_NOTES_FILTER_NAME;
+export class NoteIdFilter {
+  _filter: ScalableBloomFilter;
+  _name: string;
+
+  private constructor(name: string, filter: ScalableBloomFilter) {
     this._filter = filter;
+    this._name = name;
   }
 
-  public static async deserializeFromDb(): Promise<ExpiredNoteFilter> {
-    return ExpiredNoteFilter._deserializeFilter()
+  public static async deserializeFromDb(name: string): Promise<NoteIdFilter> {
+    return NoteIdFilter._deserializeFilter(name)
       .catch((err) => {
         if (err.message === "No BloomFilter found") {
           return new ScalableBloomFilter();
@@ -19,7 +26,7 @@ export class ExpiredNoteFilter {
         }
       })
       .then((filter) => {
-        return new ExpiredNoteFilter(filter);
+        return new NoteIdFilter(name, filter);
       });
   }
 
@@ -35,24 +42,26 @@ export class ExpiredNoteFilter {
   }
 
   private _serialize(): Promise<void> {
-    return upsertFilter(ExpiredNoteFilter.FILTER_NAME, this._filter);
+    return upsertFilter(this._name, this._filter);
   }
 
-  private static _deserializeFilter(): Promise<ScalableBloomFilter> {
-    return getFilter<ScalableBloomFilter>(
-      this.FILTER_NAME,
-      ScalableBloomFilter
-    );
+  private static _deserializeFilter(
+    name: string
+  ): Promise<ScalableBloomFilter> {
+    return getFilter<ScalableBloomFilter>(name, ScalableBloomFilter);
   }
 }
 
-let _filter: ExpiredNoteFilter;
+let _filters: Record<FilterName, NoteIdFilter | null> = {
+  expiredNotes: null,
+  deletedNotes: null,
+};
 
-export async function getExpiredNoteFilter(): Promise<ExpiredNoteFilter> {
-  if (_filter) {
-    return _filter;
+export async function getNoteFilter(name: FilterName): Promise<NoteIdFilter> {
+  if (_filters[name] !== null) {
+    return _filters[name] as NoteIdFilter;
   } else {
-    _filter = await ExpiredNoteFilter.deserializeFromDb();
-    return _filter;
+    _filters[name] = await NoteIdFilter.deserializeFromDb(name);
+    return _filters[name] as NoteIdFilter;
   }
 }
