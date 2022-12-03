@@ -22,4 +22,4 @@ app.use(
 );
 
 app.listen(PORT);
-console.log(`Reverse proxy listening at http://localhost:${5000}`);
+console.log(`Reverse proxy listening at http://localhost:${PORT}`);
