@@ -1,7 +1,7 @@
 {
   "scripts": {
     "proxy": "node proxy.js",
-    "dev": "concurrently -n plugin,webapp,server,proxy \"npm --prefix ./plugin run dev\" \"npm --prefix ./webapp run dev -- --open\" \"npm --prefix ./server run dev\" \"npm run proxy\""
+    "dev": "concurrently -n plugin,webapp,server,proxy \"npm --prefix ./plugin run dev\" \"npm --prefix ./webapp run dev\" \"npm --prefix ./server run dev\" \"npm run proxy\""
   },
   "dependencies": {
     "concurrently": "^7.2.2"
