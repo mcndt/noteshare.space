@@ -7,6 +7,7 @@ export const DELETED_NOTES_FILTER_NAME = "deletedNotes" as const;
 type FilterName =
   | typeof EXPIRED_NOTES_FILTER_NAME
   | typeof DELETED_NOTES_FILTER_NAME;
+
 export class NoteIdFilter {
   _filter: ScalableBloomFilter;
   _name: string;

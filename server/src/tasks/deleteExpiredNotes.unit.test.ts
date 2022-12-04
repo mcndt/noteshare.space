@@ -11,7 +11,7 @@ vi.mock("../lib/expiredNoteFilter", () => {
   const instance = {
     addNoteIds: vi.fn(),
   };
-  return { getExpiredNoteFilter: () => instance };
+  return { getNoteFilter: (name: string) => instance };
 });
 
 vi.spyOn(logger, "error");
@@ -33,12 +33,13 @@ describe("deleteExpiredNotes", () => {
         insert_time: new Date(),
         expire_time: new Date(),
         crypto_version: "v1",
+        secret_token: "secret_token",
       },
     ]);
     mockedDao.deleteNotes.mockResolvedValue(1);
 
     // mock ExpiredNoteFilter
-    const mockedFilter = vi.mocked(await filter.getNoteFilter());
+    const mockedFilter = vi.mocked(await filter.getNoteFilter("expiredNotes"));
     mockedFilter.addNoteIds.mockResolvedValue();
 
     // test task call

@@ -3,10 +3,12 @@ import express from "express";
 import supertest from "supertest";
 import { vi, describe, it, beforeEach, afterEach, expect } from "vitest";
 import * as noteDao from "../../db/note.dao";
+import * as bloomFilter from "../../db/bloomFilter.dao";
 import EventLogger from "../../logging/EventLogger";
 import { deleteNoteController } from "./note.delete.controller";
 
 vi.mock("../../db/note.dao");
+vi.mock("../../db/bloomFilter.dao");
 vi.mock("../../logging/EventLogger");
 
 const VALID_USER_ID = "f06536e7df6857fc";
@@ -17,6 +19,7 @@ const MOCK_NOTE_ID = "NOTE_ID";
 describe("note.delete.controller", () => {
   let mockNoteDao = vi.mocked(noteDao);
   let mockEventLogger = vi.mocked(EventLogger);
+  let mockBloomFilterDao = vi.mocked(bloomFilter);
 
   const test_app = express()
     .use(express.json())
@@ -40,6 +43,10 @@ describe("note.delete.controller", () => {
       } else {
         throw new Error("Note not found");
       }
+    });
+
+    mockBloomFilterDao.getFilter.mockImplementation(async () => {
+      throw new Error("No BloomFilter found");
     });
   });
 
