@@ -1,5 +1,6 @@
 FROM node:16-alpine AS BUILD_IMAGE
 
+RUN apk add openssl1.1-compat
 
 # install dependencies
 WORKDIR /app
@@ -17,6 +18,8 @@ RUN npm run build
 RUN npm prune --production
 
 FROM node:16-alpine
+
+RUN apk add openssl1.1-compat
 
 WORKDIR /app
 COPY --from=0 /app .
