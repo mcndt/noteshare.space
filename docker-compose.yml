@@ -52,7 +52,7 @@ services:
     labels:
       - "traefik.enable=true"  # tell Traefik this is something we would like to expose
       - "traefik.http.routers.backend.entrypoints=web"  # what entrypoint should be used for the backend service.
-      - "traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/api`) && Method(`POST`)"  # 
+      - "traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/api`) && (Method(`POST`) || Method(`DELETE`))"  # 
 
   # Frontend for serving encrypted notes over HTML (SvelteKit)
   frontend:
