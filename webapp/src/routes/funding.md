@@ -14,7 +14,7 @@ As I develop this feature, I am still deciding on how I will fund this: communit
 
 ## Funding
 
-I already rented this VPS for other purposes, so I haven no problem paying out of pocket for hosting and you can expect the service to be available
+I already rented this VPS for other purposes, so I have no problem paying out of pocket for hosting, and you can expect the service to be available.
 
 If you wish to financially support me and the development of this plugin and service, you can send donations via my [_Buy me a coffee_-profile](https://www.buymeacoffee.com/mcndt).
 
