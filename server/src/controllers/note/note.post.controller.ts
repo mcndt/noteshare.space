@@ -47,14 +47,13 @@ export async function postNoteController(
   }
 
   // Create note object
-  const EXPIRE_WINDOW_DAYS = 30;
   const secret_token = generateToken();
 
   const note = {
     ciphertext: notePostRequest.ciphertext as string,
     hmac: notePostRequest.hmac as string,
     iv: notePostRequest.iv as string,
-    expire_time: addDays(new Date(), EXPIRE_WINDOW_DAYS),
+    expire_time: addDays(new Date(), process.env(EXPIRE_WINDOW_DAYS)),
     crypto_version: notePostRequest.crypto_version,
     secret_token: secret_token,
   } as EncryptedNote;
@@ -65,7 +64,7 @@ export async function postNoteController(
       event.success = true;
       event.note_id = savedNote.id;
       event.size_bytes = getNoteSize(note);
-      event.expire_window_days = EXPIRE_WINDOW_DAYS;
+      event.expire_window_days = process.env(EXPIRE_WINDOW_DAYS);
       await EventLogger.writeEvent(event);
       res.json({
         view_url: `${process.env.FRONTEND_URL}/note/${savedNote.id}`,
