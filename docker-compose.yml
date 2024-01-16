@@ -45,6 +45,8 @@ services:
       # Rate limit for downloading notes
       - GET_LIMIT_WINDOW_SECONDS=60
       - GET_LIMIT=20
+      # Duration in days that notes are kept
+      - EXPIRE_WINDOW_DAYS=30
     depends_on:
       migrate:
         condition: service_completed_successfully
